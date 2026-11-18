@@ -1,0 +1,4 @@
+method,expenditure_upper,energy_lower_all_t,improvement_over_constant_riccati_percent
+constant linear dissipation,0.001879417765043,0.098120582234957,-0.47868074
+constant Riccati,0.001870464213121,0.098129535786879,0.00000000
+piecewise Riccati,0.001870015073372,0.098129984926628,0.02401221
