@@ -1,0 +1,6 @@
+k,energy_at_H,viable_through_H,exit_time,transverse_norm_at_H
+0.5,4.8,True,none,8.534e-06
+1.0,4.2,True,none,0.0
+2.0,1.8,True,none,0.0
+3.0,-2.2,False,11.25,0.0
+4.0,-7.8,False,4.090909,0.0

@@ -1,0 +1,83 @@
+name: Deploy Research Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - '**/*.css'
+      - '**/*.js'
+      - '**/*.pdf'
+      - '**/*.mp3'
+      - '**/*.vtt'
+      - '.github/workflows/pages.yml'
+      - '!README.md'
+      - '!**/README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare website
+        run: |
+          mkdir -p _site
+
+          rsync -av \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='experiments/' \
+            --exclude='results/' \
+            --exclude='*.tex' \
+            --exclude='*.sh' \
+            --exclude='*.log' \
+            --exclude='*.txt' \
+            --exclude='README.md' \
+            --exclude='LICENSE' \
+            ./ _site/
+
+          if [ ! -f _site/index.html ]; then
+            cat > _site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Research Archive</title>
+          </head>
+          <body>
+            <h1>Research Archive</h1>
+            <p>Research manuscripts and audio presentations.</p>
+          </body>
+          </html>
+          HTML
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

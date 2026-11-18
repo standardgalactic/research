@@ -1,0 +1,1379 @@
+\documentclass[11pt,notitlepage]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype,geometry,setspace,amsmath,amssymb,amsthm,mathtools,booktabs,array,hyperref}
+\geometry{margin=1.1in}
+\setstretch{1.08}
+\hypersetup{hidelinks}
+\setcounter{tocdepth}{2}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\K}{\mathcal K}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\cA}{c_A}
+\newcommand{\lmax}{\lambda_{\max}}
+\title{Synchronization and Resource Viability in Stuart--Landau Oscillator Networks:\\[0.4ex]
+\large Certified Expenditure Bounds and Validated Enclosures}
+\author{Flyxion\\Independent Researcher}
+\date{November 2026}
+\setlength{\emergencystretch}{4em}
+\usepackage{graphicx}
+\begin{document}
+\maketitle
+\begin{abstract}
+\noindent A network of coupled oscillators may converge to synchrony while the reservoir that powers it approaches exhaustion, and a network that is energetically viable may remain incoherent. This monograph treats coordination, energetic feasibility and the preservation of future admissible operation as three distinct mathematical predicates, and develops a sequence of certificates that connect them for Stuart--Landau networks with an explicit resource state. Starting from a phase-network model with nonnegative storage, bounded supply and state-dependent consumption, the text establishes positivity under inward-pointing boundary conditions, invariant operating rectangles, a conditional contraction estimate, and counterexamples showing that synchronization neither implies viability nor is implied by it. Expenditure is then derived from an explicit actuator law rather than imposed, and two plausible conventions are shown to give opposite conclusions about the cost of faster coordination. For the full complex-amplitude network, cubic monotonicity yields transverse disagreement bounds and a hierarchy of cumulative-expenditure certificates: global, decay-sensitive, modewise, edge-dissipative, and direct spectral. Persistent frequency heterogeneity is handled through forced-disagreement envelopes, graph-resolved forcing metrics, an exact signed-work identity, and prospective checkpoint-restarted enclosures. A tunable Young allocation is derived and optimized, and the resulting certificates are calibrated against integrated trajectories. For the two-oscillator real reduction, joint dissipation and Riccati comparison give uniform-in-time expenditure bounds. Fixed uncertain parameters are treated by set-membership recursions, Taylor sensitivity enclosures and continuous-cell exclusion, including a reported negative result. Finally, validated propagation by Picard tubes, outward dyadic rounding, affine generators and moving frames is compared systematically, with attention to cases in which a narrower state enclosure does not yield a tighter bound on accumulated expenditure. Every result is stated with its assumptions, the arithmetic under which it holds, and the claims it does not make. The expenditure laws are constitutive models and not calibrated physiology.
+\end{abstract}
+\par\bigskip\noindent\textbf{Keywords:} Stuart--Landau oscillators; synchronization; viability theory; actuation expenditure; Laplacian spectral bounds; edge dissipation; validated numerics; Picard enclosures; affine generators.
+\clearpage
+\tableofcontents
+\clearpage
+\part{Foundations}
+
+\chapter{Scope, Conventions and Evidentiary Boundary}\label{ch:intro}
+
+\section{The Problem}
+A recent computational study by Lombardo \cite{lombardo2026} couples Stuart--Landau neural oscillators with stochastic cardiac and respiratory rhythms and a scalar energy-like state, and reports model-internal associations between that state and synthetic cognitive proxies. Its neural power is $P=N^{-1}\sum_i|z_i|^2$ and its reported energy law is $\dot E=(0.4+0.2h(t))-0.05P(t)-\gamma E(t)$. The source limits its findings to the model, and the energy variable and its coefficients are phenomenological, so nothing below treats them as a calibrated physiological balance. What the study makes vivid is a structural question that can be posed independently of any biological interpretation: under which assumptions can coordination persist without violating storage, supply and recovery constraints?
+
+The question separates into three predicates that are routinely conflated. Dynamical coordination asks whether the relative phases or complex amplitudes of the oscillators contract toward a common orbit. Energetic feasibility asks whether a resource trajectory stays above a stated floor under a stated supply. Preservation of future admissible operation asks whether a trajectory exists, or a control policy exists against every admissible disturbance, that remains inside an operating region for all later times. A system may satisfy the first and fail the second, as in a perfectly synchronized network that exhausts a finite reservoir at a constant basal rate. A system may satisfy the second and fail the first, as in an uncoupled network fed by a regulated supply. The monograph proves that these are independent within the model class studied, and then asks how much can nevertheless be said quantitatively when the three predicates interact through an expenditure law that charges for coordination.
+
+\section{Structure of the Argument}
+This monograph develops the subject in one sequence, with the numerical experiments that test each claim. Part~I fixes the resource-constrained model, proves the separation results, and treats the full complex-amplitude network with an explicit resource state. Part~II studies expenditure laws and derives analytic certificates of cumulative actuator expenditure, beginning with crude global bounds and moving through spectral and edge-resolved refinements to network-level certificates under persistent frequency heterogeneity, signed frequency work, and the tunable allocation of dissipation between transient and persistent terms. Part~III isolates the two-oscillator real reduction in which exact dissipation identities are available, and then treats fixed but uncertain parameters through set-membership recursions and Taylor sensitivity enclosures. Part~IV compares validated propagation schemes, in which the enclosure of a reachable set is established by Picard tubes, outward-rounded arithmetic and correlation-preserving representations. Part~V synthesizes the results and records which questions remain open. Two appendices give notation and the computational materials behind the tables.
+
+\section{Conventions}
+Throughout, $L=L^\top\succeq0$ denotes the Laplacian of a connected undirected weighted graph on $N$ vertices with eigenvalues $0=\lambda_1<\lambda_2\le\cdots\le\lambda_N$, and $P=I-\one\one^\top/N$ is the projector onto the mean-zero subspace. States $z\in\C^N$ carry the real inner product $\re\langle u,v\rangle=\re\sum_j\bar u_jv_j$, so that $\C^N$ is treated as a real Hilbert space of dimension $2N$. The resource state is a scalar $E$ with operating floor $E_*$, constant supply $q$ and basal drain $b$ unless stated otherwise. The actuator coefficient is $c_A>0$ and coupling is $k>0$. The first operational exit is $t_*=\inf\{t\ge0:E(t)<E_*\}$, and every estimate is restricted to $t<t_*$, because no claim is made about the dynamics after the operating constraints fail. The symbols $(\cdot)_+=\max\{\cdot,0\}$ and $\|\cdot\|$ for the Euclidean norm are used without further comment.
+
+Three distinctions recur and are worth stating once. A \emph{sufficient} certificate guarantees viability when its inequality holds, and its failure does not imply exhaustion. A \emph{necessary and sufficient} criterion, such as the exact trajectory-wise integral identity for the resource, is by contrast exact but requires the trajectory. A \emph{conservative} certificate is a sufficient one whose looseness has been quantified against an observed or exactly solvable case. Second, the arithmetic under which a statement holds matters: some results are theorems in real arithmetic, some are enclosures computed in exact rational arithmetic with outward dyadic rounding, some are enclosures computed with outward-rounded multiprecision interval arithmetic whose library is trusted but unaudited, and some are numerical integrations of a trajectory used only for comparison. Each statement below is labelled accordingly. Third, the expenditure laws are constitutive. When a law is written $c_Ak^2\|Lz\|^2$ it is a specified actuator model, and no claim is made that neurons or any other biological system obey it.
+
+\section{Reading Guide}
+Readers interested only in the certificates for the full network may proceed from Chapter~\ref{ch:model} directly to Chapters~\ref{ch:spectral} and~\ref{ch:network}. The comparison of validated propagators in Chapter~\ref{ch:frames} is self-contained given the reduced model of Chapter~\ref{ch:reduced}. Negative and mixed results are retained throughout, since a catalogue of bounds that reports only the best number would misrepresent how far each method can be trusted. Chapter~\ref{ch:synthesis} gathers them.
+\chapter{A Resource-Constrained Oscillator Network}\label{ch:model}
+
+\section{Phase Network and Admissibility}
+Let $G=(V,\mathcal E)$ be a connected undirected weighted graph with symmetric weights $a_{ij}\ge0$ and Laplacian $L$. Let $\theta_i\in\mathbb T$ be phases, $e\ge0$ usable energy, and $r\in[0,R]$ a supply reservoir. On a cohesive chart in which edge differences have magnitude below $\pi/2$ consider
+\begin{align}
+\dot\theta_i&=\omega_i-k(e)\sum_j a_{ij}\sin(\theta_i-\theta_j)+u_i(t),\label{eq:phase}\\
+\dot e&=s(r,t)-c_0-c_1D(\theta)-\ell(e),\label{eq:energy}\\
+\dot r&=q(t)-s(r,t)-d(r),\label{eq:reservoir}
+\end{align}
+where $k(e)\ge0$ is coupling capacity, $c_0>0$ is basal expenditure, $c_1\ge0$ weights a coordination-dependent cost through $D(\theta)=\tfrac12\sum_{i,j}a_{ij}[1-\cos(\theta_i-\theta_j)]$, $q$ is replenishment, $s$ is transfer from reservoir to usable storage, and $\ell,d\ge0$ are losses. A positive $c_1$ makes incoherence costly; the opposite empirical hypothesis is representable by another cost function, and no energetic advantage of synchrony is assumed to be a biological fact. The phase equations are invariant under a common shift, so coherence is measured by $W(\theta)=\tfrac12\|\vartheta\|^2$ with $\vartheta=\theta-\bar\theta\one$ on a consistent local lift.
+
+A state is \emph{operationally admissible} when $(\theta,e,r)\in\K:=\{\theta\in\Theta_\delta,\ e\in[e_*,E_*],\ r\in[r_*,R]\}$, where $\Theta_\delta$ is a compact cohesive phase region. The distinction between mathematical nonnegativity $e\ge0$ and a positive engineering reserve $e\ge e_*>0$ is essential.
+
+\begin{definition}[Continuation set and viability kernel]
+For a state $x$ and admissible input class $\mathcal U$, let $\mathcal C_H(x)$ be the set of trajectories on $[0,H]$ that satisfy the equations, the input constraints, and $x(t)\in\K$ for all $t\in[0,H]$. The existential viability kernel is $\operatorname{Viab}(\K)=\{x\in\K:\mathcal C_\infty(x)\neq\varnothing\}$. For a disturbance class $\mathcal D$, the robust kernel requires one admissible control policy that keeps the state in $\K$ against every disturbance in $\mathcal D$.
+\end{definition}
+The order of quantifiers is the whole content: existence of one favourable supply schedule is weaker than survival under every admissible supply interruption. The viability framework follows Nagumo \cite{nagumo1942} and Aubin \cite{aubin1991}, and the set-invariance viewpoint of Blanchini \cite{blanchini1999}.
+
+\section{Boundary Behaviour and Invariance}
+\begin{proposition}[Positivity at the storage boundary]\label{prop:positive}
+Suppose the vector field is locally Lipschitz and, whenever $e=0$, the transfer satisfies $s(r,t)\ge c_0+c_1D(\theta)+\ell(0)$. Then every solution with $e(0)\ge0$ stays nonnegative as long as it exists. If the inequality fails at a reachable boundary state and the field is continuous, that state belongs to no forward-invariant nonnegative region.
+\end{proposition}
+\begin{proof}
+At $e=0$ the inequality gives $\dot e\ge0$, and the tangent cone of $[0,\infty)$ at zero is $[0,\infty)$, so the standard tangency criterion for locally Lipschitz ordinary differential equations gives invariance. Conversely, a strictly negative derivative at the boundary produces $e(t)<0$ for small $t>0$.
+\end{proof}
+The proposition exposes a modelling choice. A physical system with insufficient supply must terminate operation at the boundary, shed load, or change its dynamics, and continuing the unconstrained equation into negative energy is a mathematical artifact and not a prediction.
+
+\begin{proposition}[Invariant energy--reservoir rectangle]\label{prop:rectangle}
+Assume $\theta(t)\in\Theta$ with $D(\theta)\le D_{\max}$ there, and let $0<e_*<E_*$, $0\le r_*<R$. If uniformly in admissible $t$ and $\theta\in\Theta$ one has $s\ge c_0+c_1D_{\max}+\ell(e_*)$ at $e=e_*$, $s\le c_0+\ell(E_*)$ at $e=E_*$, $q\ge s(r_*,t)+d(r_*)$ at $r=r_*$, and $q\le s(R,t)+d(R)$ at $r=R$, then $[e_*,E_*]\times[r_*,R]$ is forward invariant for the energy--reservoir subsystem along every phase trajectory in $\Theta$.
+\end{proposition}
+\begin{proof}
+The four inequalities give $\dot e\ge0$, $\dot e\le0$, $\dot r\ge0$, $\dot r\le0$ on the corresponding faces, and the tangent-cone criterion for a rectangle applies. Invariance of $\Theta$ itself is a separate phase-dynamics obligation.
+\end{proof}
+The conditions are strong and may be infeasible for a finite reservoir with strictly positive basal cost. Their value is to make the obligations explicit instead of silently assuming sustainable operation.
+
+\section{Synchronization as a Separate Obligation}
+\begin{proposition}[Conditional contraction of relative phases]\label{prop:contract}
+Assume identical frequencies $\omega_i=\omega$, identical forcing $u_i=u(t)$, and a solution with $|\theta_i-\theta_j|\le\delta<\pi/2$ on every edge. If $k(e(t))\ge k_*>0$ then $W(t)\le W(0)\exp[-2k_*\lambda_2(L)\cos\delta\,t]$.
+\end{proposition}
+\begin{proof}
+Subtracting the mean phase, symmetry of the weights cancels common forcing and frequency, and $\dot W=-\tfrac{k(e)}2\sum_{i,j}a_{ij}(\theta_i-\theta_j)\sin(\theta_i-\theta_j)$. On $[-\delta,\delta]$ one has $x\sin x\ge(\cos\delta)x^2$, and $\sum_{i,j}a_{ij}(\vartheta_i-\vartheta_j)^2=2\vartheta^\top L\vartheta\ge2\lambda_2\|\vartheta\|^2$. Gronwall's inequality \cite{gronwall1919} finishes the argument.
+\end{proof}
+The estimate is conditional: it neither shows that an arbitrary state enters the cohesive region nor that $e(t)\ge e_*$, and energy depletion may drive $k(e)$ to zero and void its premise.
+
+\begin{example}[Perfect synchrony with finite-time loss of operation]\label{ex:exhaust}
+Take identical oscillators initially synchronized, $k(e)\equiv k_0>0$, $D=0$, $s=q=d=\ell=0$ and $c_0>0$. The synchronized manifold is invariant while $e(t)=e(0)-c_0t$, so the threshold $e_*$ is reached at $T_*=(e(0)-e_*)/c_0$, and no continuation in $\K$ exists beyond $T_*$.
+\end{example}
+\begin{example}[Viability without synchronization]
+Let $k(e)\equiv0$, take distinct constant frequencies, and let a regulated supply balance $c_0+c_1D(\theta)+\ell(e_0)$ while replenishment holds $r=r_0$. Then $e$ and $r$ stay admissible although relative phases need not converge. This is an idealized controlled counterexample and does not assert that finite reservoirs can supply indefinitely.
+\end{example}
+Together the examples show that synchronization and viability are logically independent within the model class.
+
+\section{Finite Supply and Cumulative Debt}
+Adding \eqref{eq:energy} and \eqref{eq:reservoir} cancels internal transfer,
+\begin{equation}\label{eq:total}
+\tfrac{d}{dt}(e+r)=q(t)-c_0-c_1D(\theta)-\ell(e)-d(r),
+\end{equation}
+a bookkeeping identity of the chosen equations that implies nothing about calibration to physical units.
+\begin{proposition}[Supply-deficit obstruction]\label{prop:deficit}
+Suppose $q(t)\le\bar q<c_0$ and $\ell,d,c_1D\ge0$. Then every solution with finite initial total resource leaves $\{e\ge e_*,r\ge r_*\}$ no later than $T_{\max}=(e(0)+r(0)-e_*-r_*)/(c_0-\bar q)$, provided the numerator is nonnegative. Synchronization cannot prevent the exit.
+\end{proposition}
+\begin{proof}
+Equation \eqref{eq:total} gives $\dot e+\dot r\le-(c_0-\bar q)$, so $e+r\le e(0)+r(0)-(c_0-\bar q)t$, while remaining in the rectangle requires $e+r\ge e_*+r_*$.
+\end{proof}
+Integrating \eqref{eq:total} gives a finite-horizon necessary condition on cumulative supply, which is not sufficient because resource may arrive too late or transfer rates may be too small. Timing and transfer capacity are independent continuation constraints.
+
+\section{Full Stuart--Landau Amplitude Dynamics with Resource Accounting}
+Restoring complex amplitudes, let $z_i\in\C$ and
+\begin{align}
+\dot z_i&=(\alpha+\ii\omega_i-|z_i|^2)z_i-k(e)\sum_jL_{ij}z_j+b_i(t)z_i+\xi_i(t),\label{eq:SLfull}\\
+\dot e&=s(r,t)-c_0-c_2P(z)-c_1D(z)-\ell(e),\label{eq:SLenergy}\\
+\dot r&=q(t)-s(r,t)-d(r),\label{eq:SLres}
+\end{align}
+with $P(z)=N^{-1}\sum_i|z_i|^2$, $D(z)=z^*Lz$, bounded real modulation $b_i$, and a bounded disturbance $\xi$. This is a proposed extension and not a literal reproduction of the source equations. The transfer cancels in the total balance as before.
+\begin{proposition}[Amplitude absorbing bound]\label{prop:amplitude}
+Suppose $k(e)\ge0$, $\alpha+b_i(t)\le A$ and $\|\xi(t)\|\le F$. With $V=\tfrac12\|z\|^2$,
+$\dot V\le2AV-\tfrac4NV^2+F\sqrt{2V}$, and consequently $V(t)\le V_{\max}$ with $V_{\max}$ depending only on $A,F,N,V(0)$. No finite-time norm blow-up occurs.
+\end{proposition}
+\begin{proof}
+The real part of $\sum_i\bar z_i\dot z_i$ removes the frequencies, the Laplacian contribution is $-k(e)z^*Lz\le0$, and $\sum_i|z_i|^4\ge N^{-1}(\sum_i|z_i|^2)^2=4V^2/N$. Cauchy--Schwarz bounds the forcing by $F\sqrt{2V}$, and the right side is negative for large $V$.
+\end{proof}
+The bound does not give a lower bound on any $|z_i|$, so phases need not remain defined and Kuramoto-style phase contraction cannot be transferred automatically to the full system. Indeed, amplitude death $z_i\to0$ can occur while a phase-only model keeps reporting coherent phases, so a faithful simulation must record both the phase order parameter and the minimum amplitude and mark phase coherence as undefined whenever the amplitude threshold fails.
+\begin{proposition}[Synchronous manifold]\label{prop:diagonal}
+Under identical frequencies, modulation and additive input, the diagonal $\mathcal S=\{z_1=\cdots=z_N\}$ is forward invariant, $D=0$ on it, and the common amplitude obeys $\dot z=(\alpha+\ii\omega-|z|^2+b)z+\xi$. If $\xi=0$, $b$ is constant and $\alpha+b>0$, the nonzero synchronized orbit has radius $\sqrt{\alpha+b}$, which says nothing about resource sustainability.
+\end{proposition}
+\begin{proof}
+On the diagonal $L\one=0$ removes the coupling, all right-hand sides coincide, and uniqueness preserves equality. The radial equation is $\dot a=(\alpha+b-a^2)a$.
+\end{proof}
+\begin{proposition}[Deficit despite full-amplitude synchrony]\label{prop:SLdeficit}
+If $q\le\bar q<c_0$ and $P,D,\ell,d\ge0$, any solution of \eqref{eq:SLfull}--\eqref{eq:SLres} with finite initial resources leaves $\{e\ge e_*,r\ge r_*\}$ by $T_{\rm exit}\le(e(0)+r(0)-e_*-r_*)/(c_0-\bar q)$, even on $\mathcal S$ and with arbitrarily strong coupling.
+\end{proposition}
+\begin{proof}
+Integrate the total balance and use nonnegativity of the expenditure terms; the oscillator phases and the coupling coefficient play no role.
+\end{proof}
+
+\section{A First Transverse Estimate and the Open Trade-Off}
+Write $Q=I-\one\one^\top/N$, $w=Qz$, $\bar z=N^{-1}\sum_iz_i$. A first transverse input-to-state estimate follows by a Lipschitz bound on the cubic.
+\begin{proposition}[Lipschitz transverse bound]\label{prop:transverse}
+Assume $\lambda_2(L)>0$, $k(e(t))\ge k_*$, $\|z\|\le R$, $\alpha+b_i\le A$. Put $\gamma=k_*\lambda_2-A-3R^2$ and $m(t)=\|Q((b_i+\ii\omega_i)\bar z+\xi_i)_i\|$. If $\gamma>0$ then $\|w(t)\|\le e^{-\gamma t}\|w(0)\|+\int_0^te^{-\gamma(t-s)}m(s)\,ds$.
+\end{proposition}
+\begin{proof}
+Since $QL=LQ=L$ and $\langle w,Lw\rangle\ge\lambda_2\|w\|^2$, subtract $f_i(\bar z)$ from $f_i(z_i)$ with $f_i(u)=(\alpha+b_i+\ii\omega_i)u-|u|^2u$. The frequency term has zero real inner product with $w_i$, the linear part is bounded by $A\|w\|^2$, and on $|u|\le R$ the cubic is $3R^2$-Lipschitz. The remaining projected forcing is the vector defining $m$, and scalar comparison for the upper Dini derivative gives the claim.
+\end{proof}
+The threshold is conservative because it charges the cubic term $3R^2$ as a destabilizing contribution. Chapter~\ref{ch:transverse} removes this term by exploiting monotonicity. A claim that raising coupling shrinks the viability kernel needs an explicit expenditure mechanism, because larger $k$ may reduce $D$ and thereby improve viability. The trade-off therefore remains a conjecture in this chapter.
+\begin{conjecture}[Restricted synchronization--viability trade-off]
+For a class of coupled amplitude oscillators with nonzero coordination expenditure and bounded replenishment there are parameter regimes in which increasing coupling improves finite-time coherence while reducing the measure of the robust viability kernel.
+\end{conjecture}
+Chapter~\ref{ch:expenditure} derives the expenditure laws under which this behaviour can be exhibited and shows numerically that it is parameter dependent and not universal.
+
+\section{Relation to the Published Model}
+The cited oscillator model \cite{lombardo2026} uses complex amplitudes, Laplacian coupling, a cardiac oscillator, respiratory input and multiplicative modulation by a scalar energy-like variable. The phase model above discards amplitude to isolate a tractable theorem, so its propositions do not apply automatically to the published model. A faithful extension retains the amplitudes and replaces the single energy equation by explicit storage, replenishment and dissipation equations, as in \eqref{eq:SLfull}--\eqref{eq:SLres}. That model's synthetic cognition proxies are model outputs, and a mediation effect computed from model-generated variables is neither a theorem of feasibility nor a validation of a physiological mechanism. Model-internal mathematical outcomes and independently measured biological outcomes would have to be reported in separate tables.
+\part{Expenditure Laws and Analytic Certificates}
+
+\chapter{Expenditure Laws for Coordination}\label{ch:expenditure}
+
+The separation results of Chapter~\ref{ch:model} are qualitative. To obtain quantitative statements one must say what coordination costs, and the answer is not forced by the oscillator equations. This chapter examines three specifications of that cost: a standing charge for maintaining coupling capacity, a charge proportional to the rate at which coupling removes disagreement, and a charge for quadratic actuator effort derived from a resistive transducer. They lead to different conclusions about whether faster coordination is more expensive, and the difference is itself a result.
+
+\section{Charging for Coupling Capacity}
+Consider unwrapped phases $\theta\in\R^N$ and available energy $E\ge E_*$ with
+\begin{equation}\label{eq:capacity}
+\dot\theta=\omega\one-kL\theta,\qquad \dot E=q-b-ck^2,
+\end{equation}
+where $k\ge0$ is a fixed coupling intensity and $c>0$ is a cost coefficient. The quadratic charge represents continuously provisioned capacity, including at exact agreement. It is not the dissipative edge-disagreement cost $k\theta^\top L\theta$, which vanishes at synchrony. With $w=P\theta$ and finite-horizon viability defined as $E(t)\ge E_*$ on $[0,H]$, the target of synchronization is $\|w(\tau)\|\le\varepsilon$ for some $\tau>0$.
+
+\begin{proposition}[Contraction and exact viability threshold]\label{prop:capacity}
+For $k>0$ one has $\|w(t)\|\le e^{-k\lambda_2t}\|w_0\|$. The system is viable on $[0,H]$ if and only if $E_0-E_*+H\min\{0,q-b-ck^2\}\ge0$. If $q-b-ck^2<0$ the first exit time is $T_{\rm exit}=(E_0-E_*)/(b+ck^2-q)$.
+\end{proposition}
+\begin{proof}
+Projecting gives $\dot w=-kLw$ because $P\one=0$ and $PL=L$, and the spectral theorem gives the norm estimate. Integrating the energy equation gives $E(t)=E_0+(q-b-ck^2)t$, whose minimum over $[0,H]$ occurs at an endpoint.
+\end{proof}
+\begin{proposition}[A synchronization--viability window]\label{prop:window}
+A sufficient synchronization threshold is $k\ge k_{\rm sync}=\log(\|w_0\|/\varepsilon)/(\lambda_2\tau)$, and exact finite-horizon viability is equivalent to $k\le k_{\rm viable}=\sqrt{(q-b+(E_0-E_*)/H)/c}$ whenever the radicand is nonnegative. A coupling meeting both exists whenever $k_{\rm sync}\le k_{\rm viable}$. If $k_{\rm sync}>k_{\rm viable}$ no coupling meets the sufficient synchronization guarantee together with viability; for a worst-case initial condition in the $\lambda_2$ eigenspace the threshold is also necessary, so the two goals are then genuinely incompatible.
+\end{proposition}
+On an eight-node ring with $E_0=1$, $E_*=0.1$, $q=0.20$, $b=0.10$, $c=0.02$ and $H=40$, one finds $k_{\rm viable}=\sqrt{(0.10+0.90/40)/0.02}\approx2.475$. The exact matrix-exponential sweep reproduces the threshold: couplings $0.5,1,2$ remain viable with terminal energies $4.8,4.2,1.8$, while $k=3$ exits at $t=11.25$ and $k=4$ at $t\approx4.09$, with terminal energies $-2.2$ and $-7.8$ obtained by continuing the unconstrained equation, which has no operational meaning past exit. The terminal disagreement is negligible at every tested coupling. The hypothesis behind \eqref{eq:capacity} is a modelling assumption; it is not licensed by the disagreement dissipation $\re(z^*Lz)$ of the full model, which vanishes on exact synchrony.
+
+\section{Dissipation Accounting versus Actuator Power}
+Remove the standing charge and derive expenditure from the control force. In a rotating frame the homogeneous linearized subsystem is $\dot x=-kLx$ with actuation $u=-kLx$. Two nonnegative conventions are natural:
+\[
+p_{\rm diss}=c_Dk\,x^\top Lx,\qquad p_{\rm act}=c_A\|u\|^2=c_Ak^2\|Lx\|^2.
+\]
+For a unit Laplacian eigenvector $v$ with eigenvalue $\lambda>0$ and $x(0)=av$ one has $x(t)=ae^{-k\lambda t}v$.
+\begin{proposition}[Exact transient expenditures]\label{prop:transient}
+The cumulative costs up to $H$ are
+$C_D(k,H)=\tfrac{c_Da^2}2(1-e^{-2k\lambda H})$ and $C_A(k,H)=\tfrac{c_Aa^2k\lambda}2(1-e^{-2k\lambda H})$. As $H\to\infty$, $C_D\to c_Da^2/2$ independently of $k$, while $C_A\to c_Aa^2k\lambda/2$. For fixed $H>0$, $C_A$ is strictly increasing in $k$.
+\end{proposition}
+\begin{proof}
+Insert the solution and integrate. For monotonicity, $\tfrac{d}{dk}[k(1-e^{-\beta k})]=1-e^{-\beta k}+\beta ke^{-\beta k}>0$ for $\beta=2\lambda H>0$.
+\end{proof}
+Hence the statement that faster synchronization costs more depends on the power convention and the observation horizon. Under dissipation accounting the infinite-horizon cost is independent of the coupling rate, while under actuator accounting it grows linearly with $k$, because the control amplitude grows faster than its duration shrinks.
+
+\begin{proposition}[Viability and the synchronization window]\label{prop:actwindow}
+Let $q\le b$ and $E(t)=E_0+(q-b)t-C_A(k,t)$. Viability on $[0,H]$ is equivalent to $(b-q)H+C_A(k,H)\le E_0-E_*$. The synchronization requirement $\|x(\tau)\|\le\varepsilon<|a|$ holds exactly when $k\ge k_{\rm sync}=\log(|a|/\varepsilon)/(\lambda\tau)$, and a feasible constant coupling exists if and only if the viability inequality holds at $k=k_{\rm sync}$. In particular, if $(b-q)H+C_A(k_{\rm sync},H)>E_0-E_*$ no constant coupling meets both the deadline and the energy floor.
+\end{proposition}
+\begin{proof}
+The energy is nonincreasing because $q\le b$ and $p_{\rm act}\ge0$, so its minimum is at $H$. The cost term increases strictly with $k$, so the least admissible coupling minimizes expenditure.
+\end{proof}
+For a general initial state $x_0=\sum_{j\ge2}a_jv_j$ one has $C_A(k,H)=\tfrac{c_Ak}2\sum_{j\ge2}\lambda_ja_j^2(1-e^{-2k\lambda_jH})$ and $\|w(t)\|^2=\sum_{j\ge2}a_j^2e^{-2k\lambda_jt}$, so the single-mode threshold is replaced by a spectral inequality.
+
+On an eight-node cycle with its first nonzero eigenvector, $a=1$, $E_0=1$, $E_*=0.1$, $q=b=0.1$, $c_A=2$, $H=40$, $\tau=5$ and $\varepsilon=0.1$, the threshold is $k_{\rm sync}=\log10/(5\lambda_2)\approx0.7862$ and, since the exponential term is negligible at $H=40$, viability holds for $k\lambda_2\le0.9$, that is $k\lesssim1.536$. The sweep confirms a nonempty window.
+\begin{table}[ht]\centering\small
+\caption{Actuator-power accounting on the eight-node cycle. The deadline disagreement is $\|x(5)\|$ and the energy is evaluated at $H=40$ from the closed-form expression.}
+\begin{tabular}{rrrcc}\toprule
+$k$&Disagreement at $\tau$&Energy at $H$&Synchronized&Viable\\\midrule
+0.20&0.5567&0.8829&no&yes\\
+0.50&0.2312&0.7071&no&yes\\
+0.7862&0.1000&0.5395&yes&yes\\
+1.00&0.0535&0.4142&yes&yes\\
+1.50&0.0124&0.1213&yes&yes\\
+2.00&0.0029&$-0.1716$&yes&no\\
+4.00&$8.2\times10^{-6}$&$-1.3431$&yes&no\\\bottomrule
+\end{tabular}
+\end{table}
+
+\section{A Resistive Realization}
+To justify the quadratic law, suppose each complex control $u_i$ is produced by currents $I_i\in\R^2$ through a linear transducer $u_i=\chi I_i$ with gain $\chi>0$ and effective resistance $R_e>0$. Joule heating then gives
+\begin{equation}\label{eq:power}
+p_{\rm act}=\sum_iR_e\|I_i\|^2=\frac{R_e}{\chi^2}\|u\|^2=c_Ak^2\|Lz\|^2,\qquad c_A=R_e/\chi^2.
+\end{equation}
+Equation \eqref{eq:power} is derived from the specified transducer and not from the oscillator equation. A chemical, neural, mechanical or regenerative actuator could have a different expenditure law, so the electrical realization is an engineering analogue and not a mechanistic identification of ion-pump energetics.
+
+\section{The Full Stuart--Landau Network under Actuator Accounting}
+Let $z\in\C^N$ and
+\begin{equation}\label{eq:SLact}
+\dot z_i=(a(E)+\ii\omega_i-|z_i|^2)z_i-k(Lz)_i,\qquad
+\dot E=q-b-\frac{c_{\rm osc}}N\|z\|^2-c_Ak^2\|Lz\|^2,
+\end{equation}
+with $a(E)\le a_{\max}$ and $E(0)=E_0>E_*$. The separate oscillator maintenance term $c_{\rm osc}\|z\|^2/N$ isolates the energetic consequences of actuation and is not asserted to be calibrated.
+\begin{proposition}[Bounded amplitude before exit]\label{prop:bound}
+With $S=\|z\|^2$, $\dot S\le2a_{\max}S-2S^2/N$, hence $S(t)\le\max\{S(0),N\max(a_{\max},0)\}$ until the first energy-floor exit.
+\end{proposition}
+\begin{proof}
+Twice the real part of $\langle z,\dot z\rangle$ removes the frequency terms, $\langle z,Lz\rangle\ge0$, and $\sum_i|z_i|^4\ge S^2/N$. Scalar comparison closes the argument.
+\end{proof}
+\begin{proposition}[Exact resource identity]\label{prop:resource}
+For any solution on $[0,H]$,
+$E(t)=E_0+(q-b)t-\int_0^t[\tfrac{c_{\rm osc}}N\|z\|^2+c_Ak^2\|Lz\|^2]\,ds$.
+The trajectory is admissible on $[0,H]$ if and only if the right side is at least $E_*$ for every $t\in[0,H]$. If $q\le b$ it suffices to test $t=H$.
+\end{proposition}
+\begin{proposition}[Heterogeneous frequencies obstruct exact synchrony]\label{prop:hetero}
+If $\omega_i\neq\omega_j$ for some pair and $z_1=\cdots=z_N=\zeta\ne0$ at an instant, then the synchronization manifold is not invariant.
+\end{proposition}
+\begin{proof}
+On the diagonal $Lz=0$, so $\dot z_i-\dot z_j=\ii(\omega_i-\omega_j)\zeta\neq0$.
+\end{proof}
+These are respectively a genuine bound, an accounting identity and an obstruction, and none implies that cumulative cost is monotone in $k$ along nonlinear trajectories, because $z(s)$ itself changes with $k$. A numerical protocol makes this concrete. On an eight-node cycle with $a(E)=0.8+0.12\tanh((E-1)/0.8)$, $c_{\rm osc}=0.012$, $q=b=0.028$, $E_*=0.35$, $H=30$ and heterogeneous frequencies $(-0.16,-0.10,-0.05,-0.015,0.015,0.05,0.10,0.16)$, an ample-reserve scenario $(E_0,c_A)=(2.0,0.045)$ and a scarce-reserve scenario $(0.9,0.12)$ were integrated until the first downward crossing of $E_*$.
+\begin{table}[ht]\centering\small
+\caption{Heterogeneous-frequency runs. A dash marks that the floor was crossed before the deadline $\tau=8$, so deadline disagreement is not an admissible observable.}
+\begin{tabular}{lrrc}\toprule
+Scenario and $k$&Exit time&$\|Pz(8)\|$&Survives $H=30$\\\midrule
+Ample, $k=0.30$&--&2.246&yes\\
+Ample, $k=1.00$&--&0.147&yes\\
+Ample, $k=4.00$&--&0.084&yes\\
+Scarce, $k=0.05$&--&2.342&yes\\
+Scarce, $k=0.30$&16.09&1.995&no\\
+Scarce, $k=0.60$&9.21&1.353&no\\
+Scarce, $k=1.00$&5.92&--&no\\
+Scarce, $k=2.00$&1.31&--&no\\
+Scarce, $k=4.00$&0.19&--&no\\\bottomrule
+\end{tabular}
+\end{table}
+The scarce-reserve rows display the intended tension: stronger coupling reduces disagreement while advancing the exit. The ample-reserve rows show that every tested run survives and that final energy is not monotonically ordered in $k$, so the tension is parameter dependent and is not a universal law. A genuine theorem would have to control $\|Pz\|$ for heterogeneous frequencies, energy-dependent growth and the cubic term while respecting the stopping time, and Chapter~\ref{ch:transverse} supplies that estimate.
+\chapter{Transverse Disagreement and Global Certificates}\label{ch:transverse}
+
+\section{Model and Stopping Convention}
+Consider the full network \eqref{eq:SLact} with $a$ locally Lipschitz, $a(E)\le a_{\max}$ on $E\ge E_*$, and $E(0)=E_0>E_*$. Write $w=Pz$, $\bar\omega=N^{-1}\sum_i\omega_i$ and $\delta=\max_i|\omega_i-\bar\omega|$. All estimates hold up to $t_*=\inf\{t:E(t)<E_*\}$, and up to $t_*$ inclusive when the solution extends continuously there. The common rotation $\ii\bar\omega$ is removed by a rotating frame, which preserves all norms and costs.
+
+\begin{theorem}[Uniform amplitude comparison]\label{th:amp}
+With $S=\|z\|^2$ and
+\[B^2=\max\{S(0),N\max(a_{\max},0)\},\]
+one has $\|z(t)\|\le B$ for all $t<t_*$.
+\end{theorem}
+\begin{proof}
+$\dot S=2a(E)S-2\sum_i|z_i|^4-2k\,z^*Lz\le2a_{\max}S-2S^2/N$, and scalar comparison gives the claim.
+\end{proof}
+
+\section{Disagreement Contraction from Cubic Monotonicity}
+The map $g(\zeta)=|\zeta|^2\zeta$ on $\C\cong\R^2$ is the gradient of the convex function $|\zeta|^4/4$ and is therefore monotone, so $\re\,(\bar\zeta-\bar\eta)(g(\zeta)-g(\eta))\ge0$. This replaces the destabilizing Lipschitz charge $3R^2$ of Proposition~\ref{prop:transverse}.
+\begin{theorem}[Nonlinear transverse bound]\label{th:trans}
+Let $\gamma=k\lambda_2-a_{\max}$. The upper right Dini derivative of $\|w\|$ satisfies $D^+\|w\|\le-\gamma\|w\|+\delta\|z\|$. If $\gamma>0$ then for $0\le t<t_*$
+\begin{equation}\label{eq:Wenv}
+\|w(t)\|\le W(t):=e^{-\gamma t}\|w(0)\|+\frac{\delta B}{\gamma}\bigl(1-e^{-\gamma t}\bigr).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Let $m=\one^\top z/N$, so $w_i=z_i-m$ and $\sum_iw_i=0$. Then $\re\sum_i\bar w_ig(z_i)=\re\sum_i\bar w_i[g(z_i)-g(m)]\ge0$. The common frequency contributes zero to the real inner product, $\re\langle w,Lw\rangle\ge\lambda_2\|w\|^2$, and $\|P\operatorname{diag}(\omega_i-\bar\omega)z\|\le\delta\|z\|\le\delta B$. Therefore $\tfrac12\tfrac d{dt}\|w\|^2\le-\gamma\|w\|^2+\delta B\|w\|$. Dividing by $\|w\|$ where positive and using the Dini derivative at zero, scalar comparison yields \eqref{eq:Wenv}.
+\end{proof}
+When $\delta=0$ the synchronized diagonal is invariant and $\gamma>0$ gives exponential decay of disagreement. When $\delta>0$ exact complex synchrony fails to be invariant, and the theorem guarantees only a bounded disagreement floor $\delta B/\gamma$. The condition $\gamma>0$ is sufficient and not necessary. The mismatch term is bounded conservatively by $\delta B$, which is the first place where a graph-aware forcing metric (Chapter~\ref{ch:network}) can do better.
+
+\section{Exact and Conservative Resource Criteria}
+\begin{theorem}[Exact criterion and trajectory-independent certificate]\label{th:viability}
+For any $H>0$ on which the solution exists, admissibility on $[0,H]$ is equivalent to
+\[
+(q-b)t-\int_0^t\Bigl(\tfrac{c_{\rm osc}}N\|z\|^2+c_Ak^2\|Lz\|^2\Bigr)ds\ge E_*-E_0\quad\text{for all }t\in[0,H].
+\]
+A sufficient, trajectory-independent certificate is
+\begin{equation}\label{eq:globalcert}
+E_0-E_*\ge H\Bigl[(b-q)_++\tfrac{c_{\rm osc}}NB^2+c_Ak^2\lambda_N^2B^2\Bigr],
+\end{equation}
+and if \eqref{eq:globalcert} holds strictly the floor cannot be crossed before $H$.
+\end{theorem}
+\begin{proof}
+Integrate the energy equation for the identity. On any pre-exit interval $\|z\|^2\le B^2$ and $\|Lz\|^2\le\lambda_N^2B^2$ while $(q-b)t\ge-(b-q)_+H$, giving $E(t)\ge E_0-H[\cdots]$. A strict inequality prevents a first crossing by continuity.
+\end{proof}
+\begin{corollary}[Joint certificate]\label{cor:joint}
+If $\gamma>0$, \eqref{eq:globalcert} holds strictly, and $e^{-\gamma\tau}\|w(0)\|+\tfrac{\delta B}\gamma(1-e^{-\gamma\tau})\le\varepsilon$ for a deadline $0<\tau\le H$, then the trajectory is operational on $[0,H]$ and reaches disagreement at most $\varepsilon$ by $\tau$.
+\end{corollary}
+The certificate is deliberately loose, since it charges worst-case amplitude and worst-case Laplacian actuation for the whole horizon. Its failure does not imply failure of viability, and it cannot be used to claim that increasing $k$ necessarily shrinks the true viability kernel.
+
+\section{The Decay-Sensitive Certificate}
+Because $Lz=Lw$, one has $\|Lz\|\le\lambda_N\|w\|\le\lambda_NW(t)$, so the actuator charge can follow the decaying envelope instead of its initial value.
+\begin{theorem}[Decay-sensitive finite-horizon certificate]\label{th:decay}
+Put $w_0=\|w(0)\|$, $\beta_0=\delta B/\gamma$ and
+\begin{align}
+J(H)&=\beta_0^2H+\frac{2\beta_0(w_0-\beta_0)}{\gamma}(1-e^{-\gamma H})+\frac{(w_0-\beta_0)^2}{2\gamma}(1-e^{-2\gamma H}),\\
+D(H)&=H\Bigl[(b-q)_++\tfrac{c_{\rm osc}}NB^2\Bigr]+c_Ak^2\lambda_N^2J(H).
+\end{align}
+If $E_0-E_*>D(H)$ the floor cannot be reached on $[0,H]$.
+\end{theorem}
+\begin{proof}
+Direct integration gives $\int_0^HW(t)^2dt=J(H)$, and the energy balance before the first exit gives $E(t)\ge E_0-(b-q)_+t-\tfrac{c_{\rm osc}}NB^2t-c_Ak^2\lambda_N^2\int_0^tW^2ds$, in which all terms subtracted are nonnegative and nondecreasing in $t$.
+\end{proof}
+\begin{corollary}[Identical frequencies]\label{cor:identical}
+If $\delta=0$ then $\beta_0=0$ and $J(H)=\tfrac{w_0^2}{2\gamma}(1-e^{-2\gamma H})$, so the actuation contribution is bounded independently of the horizon by $c_Ak^2\lambda_N^2w_0^2/(2\gamma)$. The basal and maintenance terms still grow linearly in $H$.
+\end{corollary}
+When $\delta>0$ the envelope tends to $\beta_0$ and $J(H)=\beta_0^2H+O(1)$, so the certificate contains a persistent mismatch-driven allowance. This is a sufficient bound and not proof that actual actuation stays positive. The expression $k^2J(H)$ is not monotone in $k$ in general, because $\gamma$ and $\beta_0$ also depend on $k$, so the theorem does not show that larger $k$ always worsens viability.
+
+For a four-node cycle ($\lambda_2=2$, $\lambda_N=4$) with $a_{\max}=0.5$, $k=1$, $B=2$, $w_0=1$, $H=20$, $c_A=0.01$, $c_{\rm osc}=0$, $q=b$ and $\delta=0$, one has $\gamma=1.5$. The constant-amplitude allowance of \eqref{eq:globalcert} is $c_Ak^2\lambda_N^2B^2H=12.8$, whereas the decay-sensitive allowance is $0.05333$. With a reserve margin $E_0-E_*=0.1$ the earlier certificate fails and the new one succeeds. This compares sufficient certificates and is neither a simulation of depletion nor a measurement of expenditure.
+\chapter{Spectral and Edge-Resolved Certificates}\label{ch:spectral}
+
+The certificate of Theorem~\ref{th:decay} converts a disagreement norm into an actuator power through the worst-case factor $\lambda_N^2$, which is lossy whenever disagreement lies in low graph modes. This chapter retains the graph eigenmodes, which gives an exact identity and a modewise certificate, and then retains edge structure, which recovers the monotonicity of the cubic term that the modewise approach discards.
+
+\section{Spectral Decomposition and an Exact Linear Benchmark}
+Let $v_j$ be orthonormal eigenvectors of $L$ and $\xi_j=v_j^\top z$ for $j\ge2$. For the system \eqref{eq:SLact} with $F_i(z,E)=(a(E)+\ii\omega_i-|z_i|^2)z_i$,
+\begin{equation}\label{eq:modal}
+\dot\xi_j=-k\lambda_j\xi_j+f_j(t),\quad f_j=v_j^\top F(z,E),\qquad \|Lz\|^2=\sum_{j=2}^N\lambda_j^2|\xi_j|^2,
+\end{equation}
+and the last relation is an identity, not an inequality. Replacing it by $\lambda_N^2\|w\|^2$ loses information whenever disagreement is concentrated in low-frequency modes.
+
+For the linear consensus subsystem $\dot w=-kLw$ no forcing is present and the expression is exact.
+\begin{corollary}[Exact expenditure for linear consensus]\label{cor:linear}
+$C_A(H)=c_Ak^2\int_0^H\|Lw\|^2dt=\tfrac{c_Ak}2\sum_{j\ge2}\lambda_j|\xi_j(0)|^2(1-e^{-2k\lambda_jH})$.
+\end{corollary}
+This exposes a subtlety: high-frequency modes decay faster but can incur greater total actuator expenditure, and as $H\to\infty$ each initial mode is weighted by $\lambda_j$, not by $\lambda_N^2/\lambda_2$. On an eight-node cycle with an initial disagreement formed from two Laplacian eigenmodes, the exact cost and the bound obtained from global contraction, $c_Ak^2\lambda_N^2\|w(0)\|^2(1-e^{-2k\lambda_2H})/(2k\lambda_2)$, differ by a factor between $32.8$ at $H=1$ and $36.9$ at $H=20$. The factor is not an artifact of nonlinearity, since the system is linear, and it quantifies how much the worst-case graph factor can cost even in the best case.
+
+\section{The Modewise Certificate}
+Assume that until first exit $\|z\|\le B$, $|a(E)|\le A$, $|\omega_i|\le\Omega$, and that $|f_j(t)|\le M_j$.
+\begin{theorem}[Modewise finite-horizon certificate]\label{th:modewise}
+Put $r_j=k\lambda_j$, $\beta_j=M_j/r_j$, $h_j=|\xi_j(0)|-\beta_j$ and
+\begin{equation}\label{eq:Ij}
+I_j(H)=\beta_j^2H+\frac{2\beta_jh_j}{r_j}(1-e^{-r_jH})+\frac{h_j^2}{2r_j}(1-e^{-2r_jH}).
+\end{equation}
+Then up to first exit $\int_0^H\|Lz\|^2dt\le\sum_{j\ge2}\lambda_j^2I_j(H)$, and if
+\[
+E_0-E_*>H\Bigl[(b-q)_++\tfrac{c_{\rm osc}}NB^2\Bigr]+c_Ak^2\sum_{j\ge2}\lambda_j^2I_j(H)
+\]
+the floor cannot be reached on $[0,H]$.
+\end{theorem}
+\begin{proof}
+Variation of constants gives $|\xi_j(t)|\le e^{-r_jt}|\xi_j(0)|+(1-e^{-r_jt})\beta_j=\beta_j+h_je^{-r_jt}$, which is nonnegative as a convex combination of nonnegative numbers. Squaring and integrating gives \eqref{eq:Ij}, the spectral identity sums the modes, and the energy balance finishes the argument.
+\end{proof}
+The generic choice $M_j=(A+\Omega+B^2)B$ is valid but can be extremely loose. Estimating $M_j$ from an unverified simulated trajectory does not give a rigorous certificate, and a safe practical certificate takes the minimum of separately proved global and modewise bounds.
+
+\section{Time-Dependent Modal Forcing}
+The constant envelope can be replaced by one that decays with the disagreement. Rotate so that $\bar\omega=0$ and let $\Delta\omega_i=\omega_i-\bar\omega$. Since $v_j^\top\one=0$ the spatially constant part of $g(m\one)$ vanishes in each transverse mode, and $|g(\zeta)-g(\eta)|\le3B^2|\zeta-\eta|$ for $|\zeta|,|\eta|\le B$, whence
+\begin{equation}\label{eq:forcing}
+|f_j(t)|\le\bigl(|a(E)|+3B^2\bigr)\|w(t)\|+\delta B.
+\end{equation}
+With $C=A+3B^2$ and the envelope $W(t)$ of \eqref{eq:Wenv}, define
+\[
+U_j(t)=e^{-r_jt}|\xi_j(0)|+\int_0^te^{-r_j(t-s)}[CW(s)+\delta B]\,ds.
+\]
+\begin{theorem}[Decay-sensitive spectral certificate]\label{th:modalforcing}
+$|\xi_j(t)|\le U_j(t)$, hence $\int_0^Hc_Ak^2\|Lz\|^2dt\le c_Ak^2\sum_{j\ge2}\lambda_j^2\int_0^HU_j^2dt$, and the energy floor is not reached on $[0,H]$ if $E_0-E_*>H[(b-q)_++c_{\rm osc}B^2/N]+c_Ak^2\sum_j\lambda_j^2\int_0^HU_j^2dt$.
+\end{theorem}
+With $w_0=\|w(0)\|$, $\beta_0=\delta B/\gamma$, $F_0=C\beta_0+\delta B$ and $F_1=C(w_0-\beta_0)$, one has for $r_j\ne\gamma$
+\[
+U_j(t)=|\xi_j(0)|e^{-r_jt}+\frac{F_0}{r_j}(1-e^{-r_jt})+\frac{F_1}{r_j-\gamma}(e^{-\gamma t}-e^{-r_jt}),
+\]
+with the last fraction replaced by $F_1te^{-r_jt}$ when $r_j=\gamma$. For $\delta=0$ every $U_j$ decays to zero and the certificate has finite infinite-horizon actuation cost; for $\delta>0$ the envelope approaches a plateau and the cost grows at most linearly in $H$. The cubic monotonicity used for the aggregate envelope does \emph{not} make each $f_j$ dissipative, because the nonlinearity mixes Laplacian modes. Applying the scalar forcing bound $CW(t)+\delta B$ separately to every mode therefore duplicates the worst case across modes, and the certificate can be looser than the global one.
+
+\section{The Edge-Dissipative Certificate}
+The aggregate form of monotonicity can be retained without introducing modes by working with the edge energy $Q=\re\langle z,Lz\rangle=\sum_{\{i,j\}}b_{ij}|z_i-z_j|^2$, counting each undirected edge once. Consider identical frequencies and
+\begin{equation}\label{eq:ode}
+\dot z=a(t)z-g(z)-kLz,\qquad a(t)\le a_+,\quad \gamma=k\lambda_2-a_+>0,
+\end{equation}
+with actuator power $P_A=c_Ak^2\|Lz\|^2$.
+\begin{theorem}[Edge-dissipative expenditure certificate]\label{th:edge}
+Every classical solution of \eqref{eq:ode} satisfies
+\begin{align}
+Q(t)&\le Q(0)e^{-2\gamma t},\label{eq:decay}\\
+\int_0^HP_A\,dt&\le\frac{c_AkQ(0)}2\Bigl[1+\frac{a_+}\gamma\bigl(1-e^{-2\gamma H}\bigr)\Bigr].\label{eq:cert}
+\end{align}
+\end{theorem}
+\begin{proof}
+Monotonicity of $g$ gives, edge by edge, $\re\langle Lz,g(z)\rangle=\sum_{\{i,j\}}b_{ij}\re[(\bar z_i-\bar z_j)(g(z_i)-g(z_j))]\ge0$. Hence $\dot Q/2\le a_+Q-k\|Lz\|^2$, and since $\|Lz\|^2\ge\lambda_2Q$, Gronwall gives \eqref{eq:decay}. Integrating the same inequality gives $k\int_0^H\|Lz\|^2\le Q(0)/2+a_+\int_0^HQ$, and substituting \eqref{eq:decay} proves \eqref{eq:cert}.
+\end{proof}
+\begin{corollary}[Finite-horizon reserve]\label{cor:edgereserve}
+If $\dot E=q-b-p_{\rm osc}-P_A$ with $p_{\rm osc}\ge0$ and $\int_0^Hp_{\rm osc}\le C_{\rm osc}$, and if $E(0)-E_*>(b-q)_+H+C_{\rm osc}+\tfrac{c_AkQ(0)}2[1+\tfrac{a_+}\gamma(1-e^{-2\gamma H})]$, then $E>E_*$ on $[0,H]$, provided the growth bound is valid up to any putative first exit.
+\end{corollary}
+\begin{proof}
+The right-hand cost certificate is nondecreasing in the horizon, so applying it on every prefix interval excludes a first crossing.
+\end{proof}
+
+\section{Comparison of Certificates}
+On the eight-node cycle with $a_+=0.15$, $k=1$, $c_A=0.02$, $H=20$, $Q(0)=0.0311961328$ and margin $\gamma\approx0.435786$, with the initial state composed of a common component and two eigenmodes, all certificates were evaluated analytically and compared with the trapezoidal integral of a tightly integrated nonlinear trajectory (adaptive Runge--Kutta, relative tolerance $2\times10^{-10}$).
+\begin{table}[ht]\centering\small
+\caption{Cumulative actuator cost at $H=20$. The observed value is a numerical quadrature and is not a validated enclosure; the others are analytical upper bounds.}
+\begin{tabular}{lrr}\toprule
+Method&Cumulative cost&Ratio to observed\\\midrule
+Observed nonlinear trajectory&0.000299164&1.00\\
+Edge-dissipative certificate&0.000419340&1.40\\
+Global transverse (Theorem~\ref{th:viability} route)&0.012373052&41.36\\
+Decay-sensitive modewise&0.062016320&207.30\\
+Constant-forcing modewise&44.613057522&149125.58\\\bottomrule
+\end{tabular}
+\end{table}
+The ordering is instructive and runs against the expectation that finer spectral resolution should be sharper. The modewise certificate with a decay-sensitive envelope is about five times looser than the global transverse certificate, because the uniform nonlinear forcing envelope is charged independently to each mode. The edge-dissipative certificate respects the aggregate monotonicity of the cubic term, and its improvement to $1.40$ times the observed cost comes from that structure and not from any fitting to the trajectory. The comparison covers one parameter configuration and is not evidence of a universal ordering.
+
+\section{A Certificate for Real Networks with Common Growth}
+A cleaner statement holds for real oscillators $\dot x_i=ax_i-x_i^3-k(Lx)_i$ with $a\le a_{\max}$, $J'=c_Ak^2\|Lx\|^2$, $J(0)=0$. Let $y=Px$ and $V=\|y\|^2/2$. The identity $\sum_i(x_i-\bar x)x_i^3=\tfrac1N\sum_{i<j}(x_i-x_j)(x_i^3-x_j^3)\ge0$ gives $V'\le2a_{\max}V-ky^\top Ly$, so $V(t)\le V(0)e^{-2\gamma t}$ with $\gamma=k\lambda_2-a_{\max}>0$. Because $L^2\preceq\lambda_N L$ as quadratic forms, $\|Lx\|^2\le\lambda_Ny^\top Ly$.
+\begin{proposition}[Edge-energy expenditure bound]\label{prop:realnet}
+For every $T\ge0$,
+\[
+J(T)\le\frac{c_Ak^2\lambda_N\lambda_2V(0)}{k\lambda_2-a_{\max}},
+\]
+and the direct exponential route gives $c_Ak^2\lambda_N^2V(0)/(k\lambda_2-a_{\max})$, which is never smaller when $\lambda_2\le\lambda_N$. Certified lower and upper enclosures of $\lambda_2$ and $\lambda_N$ may replace the eigenvalues, because the bound decreases in $\lambda_2$ for $a_{\max}>0$.
+\end{proposition}
+\begin{proof}
+Integrating $V'$ gives $k\int_0^Ty^\top Ly\le V(0)+2a_{\max}\int_0^TV\le V(0)(1+a_{\max}/\gamma)=V(0)k\lambda_2/\gamma$, and then $J\le c_Ak^2\lambda_N\int y^\top Ly/k$.
+\end{proof}
+For $x(0)=(0.45,0.21,0.39,0.27)$, $V(0)=9/500$, $k=0.7$, $a_{\max}=0.19$, $c_A=0.1$, the path has $\lambda\in\{0,2-\sqrt2,2,2+\sqrt2\}$ (rational enclosures $\lambda_2\ge0.585$, $\lambda_N\le3.415$), the cycle $\{0,2,2,4\}$ and the complete graph $\{0,4,4,4\}$.
+\begin{table}[ht]\centering\small
+\caption{Edge-energy certificates for four-node real networks, with resource floor $E(0)-J_{\rm upper}$ for $E(0)=0.1$ and $q-b\ge0$.}
+\begin{tabular}{lrrr}\toprule
+Graph&Direct bound&Edge bound&Resource floor\\\midrule
+Path $P_4$&0.046861&0.008028&0.091972\\
+Cycle $C_4$&0.011663&0.005831&0.094169\\
+Complete $K_4$&0.005407&0.005407&0.094593\\\bottomrule
+\end{tabular}
+\end{table}
+All three networks certify $E(t)>0.08$ for every $t\ge0$. If the full model carries further nonnegative operating costs these must be bounded separately, since the displayed guarantee covers only basal demand and actuator expenditure.
+\chapter{Persistent Frequency Heterogeneity and Network-Level Certificates}\label{ch:network}
+
+The central question motivating this work can be put in one sentence: when does dynamical coordination preserve the capacity for continued operation? Chapters~\ref{ch:transverse} and~\ref{ch:spectral} answered it for identical frequencies, where disagreement decays to zero and the actuator cost of correction is a finite transient. With distinct natural frequencies the synchronized manifold is not invariant, disagreement settles at a positive floor, and actuation continues indefinitely. The relevant certificates therefore have two parts, a transient buffer and a persistent rate, and viability for all time requires the supply to cover the rate while the reserve covers the buffer. This chapter assembles four network-level certificates for the full complex network
+\begin{equation}\label{eq:hetnet}
+\dot z=(a+\ii\Omega)z-g(z)-kLz,\qquad g(z)_i=|z_i|^2z_i,\quad J'=c_Ak^2\|Lz\|^2,\quad E(t)=E_0+(q-b)t-J(t),
+\end{equation}
+with common growth $a$, $\Omega=\operatorname{diag}(\omega_i)$, $\tilde\omega=\omega-\bar\omega\one$ and $\delta=\max_i|\tilde\omega_i|$.
+
+\section{Forced Disagreement for the Full Complex Network}
+\begin{proposition}[Bounded modulus]\label{prop:modulus}
+Let $R=\max\{\max_i|z_i(0)|,\sqrt{\max(a,0)}\}$. Then $|z_i(t)|\le R$ for all $i$ and $t\ge0$.
+\end{proposition}
+\begin{proof}
+At a site attaining the maximal modulus the real part of the diffusive coupling is nonpositive in the radial derivative, and the cubic damping dominates the growth once the modulus exceeds $\sqrt{\max(a,0)}$, so the maximum cannot cross $R$ upward.
+\end{proof}
+\begin{proposition}[Forced disagreement envelope]\label{prop:forced}
+Put $y=\|Pz\|$, $\gamma=k\lambda_2-a$ and $\mathcal B=\delta\sqrt NR$. Then $D^+y\le-\gamma y+\mathcal B$, and if $\gamma>0$, $y(t)\le r+(y_0-r)e^{-\gamma t}$ with $r=\mathcal B/\gamma$. No phase locking is assumed.
+\end{proposition}
+\begin{proof}
+Cubic monotonicity makes the cubic contribution to $\tfrac{d}{dt}\|Pz\|^2$ nonpositive, the common rotation contributes zero, and the heterogeneous term is bounded by $\|\tilde\Omega z\|\,y\le\delta\sqrt NR\,y$.
+\end{proof}
+\begin{proposition}[Persistent expenditure and viability]\label{prop:persistent}
+Let $\mathcal C=c_Ak^2\lambda_N^2$. Since $\|Lz\|\le\lambda_Ny$, $J'\le\mathcal Cy^2$, and for $y_0\ge r$ and $s_0=y_0-r$,
+\[
+J(t)\le\mathcal C\Bigl[r^2t+\tfrac{2rs_0}{\gamma}(1-e^{-\gamma t})+\tfrac{s_0^2}{2\gamma}(1-e^{-2\gamma t})\Bigr].
+\]
+If $q-b\ge\mathcal Cr^2$ then $E(t)\ge E_0-\mathcal C[2rs_0/\gamma+s_0^2/(2\gamma)]$ for all $t\ge0$. If $y_0<r$ the envelope $y\le r$ gives $E(t)\ge E_0$ whenever $q-b\ge\mathcal Cr^2$.
+\end{proposition}
+These are sufficient and not necessary. On four-node networks with $a=0.19$, $k=0.7$, $c_A=0.1$, $E_0=0.1$, $q-b=0.005$, real initial state $(0.45,0.21,0.39,0.27)$, frequencies $(-0.03,-0.01,0.01,0.03)$, $R=0.45$, and certified rational spectral enclosures, the path fails the supply-rate condition because its persistent ceiling $0.00864641$ exceeds $0.005$. This does not establish exhaustion. The cycle and complete graph certify $E(t)>0.08$ for every $t\ge0$.
+\begin{table}[ht]\centering\small
+\caption{Disagreement-route certificate (Proposition~\ref{prop:persistent}).}
+\begin{tabular}{lrrr}\toprule
+Graph&Rate upper&Transient buffer&Floor for all $t\ge0$ (constant net supply)\\\midrule
+Path&0.00864641&0.04853512&not certified\\
+Cycle&0.00039037&0.01392210&0.08607790\\
+Complete&0.00008390&0.00594827&0.09405173\\\bottomrule
+\end{tabular}
+\end{table}
+More connectivity improves the disagreement decay margin in these examples, but the factor $\lambda_N^2$ in the actuator cost can counteract that improvement in other graph families.
+
+\section{Graph-Resolved Forcing}
+The bound $\mathcal B=\delta\sqrt NR$ uses only the largest frequency offset. The spatial pattern of mismatch can be retained through a quadratic form. Write $y=Pz$ and let $a_+\ge a$, $\gamma=k\lambda_2-a_+-\delta>0$, $A=kL-(a_++\delta)P$, which is positive definite on the mean-zero subspace, and $h=\tilde\omega^\top A^\dagger\tilde\omega$.
+\begin{proposition}[Graph-resolved disagreement certificate]\label{prop:graphaware}
+For all $t\ge0$, $\|Pz(t)\|^2\le e^{-\gamma t}\|Pz(0)\|^2+\tfrac{R^2h}\gamma(1-e^{-\gamma t})$, so the asymptotic ceiling is $R\sqrt{h/\gamma}$.
+\end{proposition}
+\begin{proof}
+Write $z=m\one+y$. The frequency term decomposes as $\ii P\Omega y+\ii m\tilde\omega$. Its first part contributes at most $\delta\|y\|^2$ to $\tfrac{d}{dt}\tfrac12\|y\|^2$, and $|m|\le R$. Thus $\dot V\le-\langle y,Ay\rangle+R|\langle y,\ii\tilde\omega\rangle|$ with $V=\|y\|^2/2$, and the weighted Young inequality $R|\langle y,\ii\tilde\omega\rangle|\le\tfrac12\langle y,Ay\rangle+\tfrac12R^2h$ gives $\dot V\le-\gamma V+R^2h/2$.
+\end{proof}
+\begin{table}[ht]\centering\small
+\caption{Asymptotic disagreement ceilings (rounded upward to 40-bit dyadic rationals before display).}
+\begin{tabular}{lrrr}\toprule
+Graph&Original ceiling&Graph-resolved ceiling&Reduction\\\midrule
+Path&0.12300683&0.10580117&13.99\%\\
+Cycle&0.02231405&0.01610273&27.84\%\\
+Complete&0.01034483&0.00780024&24.60\%\\\bottomrule
+\end{tabular}
+\end{table}
+Since $\|Lz\|^2\le\lambda_N^2\|Pz\|^2$, the persistent rate is $\mathcal C\,R^2h/\gamma$. The graph-resolved ceiling is not guaranteed to improve every other correlation-preserving certificate, and its advantage depends on how the frequency pattern aligns with the graph modes. The pseudoinverse is a forcing metric, not an exact steady state.
+
+\section{The Heterogeneous Edge Certificate}
+The edge energy approach of Theorem~\ref{th:edge} extends to heterogeneous frequencies with the cubic term still dissipative. Write $Q=\langle z,Lz\rangle$, $Y=\|Lz\|$, $P_A=c_Ak^2Y^2$, $a(t)\le a_+$, $\gamma=k\lambda_2-a_+>0$, $\|z\|\le B=\max\{\|z(0)\|,\sqrt{Na_+}\}$.
+\begin{theorem}[Heterogeneous edge-dissipative certificate]\label{th:hetedge}
+Let $h_0=\sqrt{Q(0)}$, $r=\delta B\sqrt{\lambda_N}/\gamma$, $G(t)=r+(h_0-r)e^{-\gamma t}$,
+\[
+I_H=r^2H+\tfrac{2r(h_0-r)}\gamma(1-e^{-\gamma H})+\tfrac{(h_0-r)^2}{2\gamma}(1-e^{-2\gamma H}),\quad M_H=\tfrac12Q(0)+a_+I_H,\quad D_H=\delta B\sqrt H.
+\]
+Then $Q(t)\le G(t)^2$ and
+\begin{equation}\label{eq:hetcert}
+\int_0^HP_A\,dt\le\frac{c_A}4\Bigl(D_H+\sqrt{D_H^2+4kM_H}\Bigr)^2.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Edgewise monotonicity gives $\re\langle Lz,g(z)\rangle\ge0$. Removing the mean frequency and applying Cauchy--Schwarz, $\tfrac12\dot Q\le a_+Q-kY^2+\delta\|z\|Y\le a_+Q-kY^2+\delta BY$. From $Y^2\ge\lambda_2Q$ and $Y^2\le\lambda_NQ$, $\tfrac12\dot Q\le-\gamma Q+\delta B\sqrt{\lambda_NQ}$, so $\eta=\sqrt Q$ obeys $D^+\eta\le-\gamma\eta+\delta B\sqrt{\lambda_N}$ and $\eta\le G$, giving $\int_0^HQ\le I_H$. Integrating the first inequality and dropping the terminal $Q(H)\ge0$ gives $kX^2\le M_H+D_HX$ for $X=(\int_0^HY^2)^{1/2}$, a quadratic inequality whose solution gives \eqref{eq:hetcert} after multiplication by $c_Ak^2$.
+\end{proof}
+At $\delta=0$ the theorem reduces to Theorem~\ref{th:edge}. A reserve corollary follows exactly as in Corollary~\ref{cor:edgereserve}. On the eight-node cycle of Chapter~\ref{ch:spectral} with frequencies $\omega_j=s\cos(2\pi j/8)$ the certificate is evaluated against the integrated trajectory.
+\begin{table}[ht]\centering\small
+\caption{Observed cost and heterogeneous edge certificate at $H=20$, $a=0.15$, $k=1$, $c_A=0.02$.}
+\begin{tabular}{rrrr}\toprule
+Dispersion $s$&Observed cost&Certified bound&Ratio\\\midrule
+0.00&0.000299&0.000419&1.40\\
+0.02&0.000375&0.001598&4.27\\
+0.05&0.000772&0.006699&8.68\\
+0.10&0.002149&0.024411&11.36\\
+0.20&0.006863&0.094449&13.76\\\bottomrule
+\end{tabular}
+\end{table}
+The looseness grows with dispersion, because $B$, $\lambda_N$ and the Cauchy--Schwarz estimate suppress information about the evolving state, and in particular they ignore the correlation between the forcing and the edge disagreement that Chapter~\ref{ch:signed} retains.
+
+\section{Direct Spectral Certification}
+Both of the preceding routes convert a disagreement ceiling into an actuator ceiling through $\lambda_N^2$. A direct route works with the edge-weighted functional $W=\tfrac12z^*Lz$ and $\mathcal Q=\|Lz\|^2$ and avoids that conversion. Let $\tilde\omega=\omega-\bar\omega\one$, $\delta=\max|\tilde\omega_i|$, $R^2\ge\max(a,0)$ with $|z_i(0)|\le R$, $\underline\lambda_2$ a certified lower bound on the spectral gap, and
+\[
+\beta=k-\frac{a_++\delta}{\underline\lambda_2},\qquad F=R\|\tilde\omega\|.
+\]
+\begin{proposition}[Direct expenditure certificate]\label{prop:direct}
+If $\beta>0$ then $\dot W\le-\beta\mathcal Q+F\sqrt{\mathcal Q}$ and, for every $T\ge0$,
+\begin{equation}\label{eq:direct}
+J(T)=c_Ak^2\int_0^T\mathcal Q\,dt\le\frac{2c_Ak^2W(0)}\beta+\frac{c_Ak^2F^2}{\beta^2}T.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Differentiating, $\dot W=\re\langle Lz,\dot z\rangle$. The growth term is $a\,z^*Lz\le(a_+/\underline\lambda_2)\mathcal Q$, because $\mathcal Q=\sum_j\lambda_j^2|\xi_j|^2\ge\underline\lambda_2\sum_j\lambda_j|\xi_j|^2$. The coupling gives $-k\mathcal Q$. The cubic term is nonpositive by edgewise monotonicity. For the frequency term, subtract the mean frequency, write $z=Pz+m\one$, and use $\|Pz\|\le\|Lz\|/\underline\lambda_2$: the part with $Pz$ is at most $(\delta/\underline\lambda_2)\mathcal Q$, and the part with the mean is at most $R\|\tilde\omega\|\sqrt{\mathcal Q}$. Young's inequality $F\sqrt{\mathcal Q}\le\tfrac\beta2\mathcal Q+F^2/(2\beta)$ and $W(T)\ge0$ give \eqref{eq:direct}.
+\end{proof}
+\begin{corollary}[Resource floor]\label{cor:directfloor}
+If $\dot E=s-c_Ak^2\mathcal Q$ with constant net supply $s=q-b$ and $s\ge c_Ak^2F^2/\beta^2$, then $E(t)\ge E(0)-2c_Ak^2W(0)/\beta$ for all $t\ge0$. This is a sufficient floor and does not assert that the actuator power converges to the displayed rate.
+\end{corollary}
+\begin{table}[ht]\centering\small
+\caption{Direct spectral certificate on the four-node examples ($n=4$, $a=0.19$, $k=0.7$, $c_A=0.1$, $R=0.45$, $s=0.005$, $E(0)=0.1$; spectral gap lower bounds $0.585$, $2$, $4$). The prior rate is the graph-resolved estimate of the preceding section.}
+\begin{tabular}{lrrrr}\toprule
+Topology&Transient buffer&Direct rate&Prior rate&Energy floor\\\midrule
+Path&0.015792&0.0001891&0.0063967&0.084208\\
+Cycle&0.011361&0.0000570&0.0002033&0.088639\\
+Complete&0.010940&0.0000477&0.0000477&0.089060\\\bottomrule
+\end{tabular}
+\end{table}
+The direct rate is lower than the prior rate by a factor of about $34$ on the path and $3.6$ on the cycle, and the two coincide on the complete graph, where all nonzero eigenvalues are equal and the conversion through $\lambda_N^2$ loses nothing. The transient buffer is conservative because the Young allocation used to obtain \eqref{eq:direct} splits the dissipation equally between the two terms. Chapter~\ref{ch:young} removes that restriction.
+\chapter{Signed Frequency Work and Prospective Enclosures}\label{ch:signed}
+
+The heterogeneous edge certificate bounds the frequency forcing and the edge disagreement independently, which discards the sign of their correlation. This chapter keeps that sign. An exact balance identity isolates a signed frequency-work integral, and the question becomes how to bound that integral prospectively, from information available at the start of the horizon or at the latest checkpoint, and not retrospectively from a completed trajectory.
+
+\section{Exact Edge-Energy Accounting}
+For $\dot z=(a(t)I+\ii\Omega)z-g(z)-kLz$ define $Q=z^*Lz$, $Y=\|Lz\|$, $T=\re\langle Lz,g(z)\rangle\ge0$ and the signed frequency work density $F=\re\langle Lz,\ii\Omega z\rangle$. Then
+\begin{equation}\label{eq:balance}
+\tfrac12\dot Q=a(t)Q-T-kY^2+F,
+\end{equation}
+and integrating gives the exact accounting identity for $C_A(H)=c_Ak^2\int_0^HY^2dt$:
+\begin{equation}\label{eq:identity}
+\frac{C_A(H)}{c_Ak}=\frac{Q(0)-Q(H)}2+\int_0^Ha(t)Q\,dt-\int_0^HT\,dt+J_F(H),\qquad J_F(H)=\int_0^HF\,dt.
+\end{equation}
+The frequency term has no fixed sign, since it depends on the state-dependent correlation between frequency offsets and edge differences, and adding a constant to every $\omega_j$ leaves $F$ unchanged. Because $L$ and $\Omega$ are real symmetric, $F=z^*Kz$ with the Hermitian matrix $K=\tfrac\ii2[L,\Omega]$, and $\kappa=\|K\|_{\rm op}$ is a graph--frequency contrast that vanishes for identical frequencies.
+
+\section{Conditional and A Priori Certificates}
+Let $\gamma=k\lambda_2-a_+>0$, $B=\max\{\|z(0)\|,\sqrt{Na_+}\}$, and let $I_H$ be the integral envelope of Theorem~\ref{th:hetedge}.
+\begin{theorem}[Signed-work certificate]\label{th:signedwork}
+If an independently justified $U_H$ satisfies $J_F(H)\le U_H$, then $C_A(H)\le c_Ak[Q(0)/2+a_+I_H+U_H]$. For prefix-wise viability it suffices to replace $U_H$ by $\max\{0,\sup_{t\le H}U(t)\}$ for a nondecreasing envelope $U\ge J_F$.
+\end{theorem}
+\begin{proof}
+Drop the nonpositive terms $-Q(H)/2$ and $-\int T$ from \eqref{eq:identity}, use $a\le a_+$, and bound $\int Q\le I_H$.
+\end{proof}
+Taking $U_H=J_F(H)$ from a completed numerical trajectory gives a valid \emph{a posteriori} bound that cannot establish predictive viability, because it presupposes the future. A fully a priori alternative follows from $|F|\le\kappa B^2=:\eta$, giving $U_H=\eta H$, which can be looser than the earlier estimate and must be combined with it by taking the minimum.
+\begin{table}[ht]\centering\small
+\caption{Frequency-dispersion study on the eight-node cycle ($H=20$). The signed-work column uses the observed $J_F$ and is therefore retrospective; the commutator column is a priori.}
+\begin{tabular}{rrrrr}\toprule
+$s$&Actual cost&Prior bound&Signed-work bound&Commutator bound\\\midrule
+0.00&0.000299&0.000419&0.000419&0.000419\\
+0.02&0.000375&0.001598&0.001122&0.006239\\
+0.05&0.000772&0.006699&0.004352&0.016853\\
+0.10&0.002149&0.024411&0.015477&0.039564\\
+0.20&0.006863&0.094449&0.058325&0.103819\\\bottomrule
+\end{tabular}
+\end{table}
+At $s=0.20$ the signed-work bound reduces the prior estimate by about $38\%$ and remains about $8.5$ times the observed expenditure. The remaining looseness comes from $I_H$, which charges a worst-case amplitude and spectral envelope even when $J_F$ is known accurately.
+
+\section{A Prospective Envelope from the Initial State}
+Suppose $\|z\|\le B$ on $[0,H]$ and $|a(t)|\le a_{\rm abs}$. Since $\|g(z)\|\le\|z\|^3$ the speed obeys $\|\dot z\|\le M:=(a_{\rm abs}+\|\Omega\|+k\lambda_N)B+B^3$.
+\begin{theorem}[Initial-state frequency-work envelope]\label{th:predictive}
+With $F_0=z(0)^*Kz(0)$ and $\eta=\kappa B^2$, for every $t\in[0,H]$,
+\[
+F(t)\le f_{\rm up}(t):=\min\{\eta,\ F_0+2\kappa BMt\},
+\qquad J_F(H)\le U(H)=\int_0^Hf_{\rm up}\le\eta H.
+\]
+With $\tau=\min\{H,\max\{0,(\eta-F_0)/(2\kappa BM)\}\}$ one has the closed form $U(H)=F_0\tau+\kappa BM\tau^2+\eta(H-\tau)$.
+\end{theorem}
+\begin{proof}
+The quadratic form satisfies $|F|\le\kappa\|z\|^2\le\eta$, and $\dot F=2\re\langle\dot z,Kz\rangle$ gives $|\dot F|\le2\kappa BM$ almost everywhere. Integrate and split at the saturation time.
+\end{proof}
+Substituting into Theorem~\ref{th:signedwork} gives a fully prospective actuator and reserve certificate. The envelope is no worse than the static commutator estimate by construction, but with the coarse global speed bound its gain vanishes quickly on long horizons.
+\begin{table}[ht]\centering\small
+\caption{Predictive envelope at $s=0.20$ against the integrated signed work and the static cap $\eta H$.}
+\begin{tabular}{rrrrr}\toprule
+$H$&Actual $J_F$&Predictive $U(H)$&Static $\eta H$&Reduction\\\midrule
+0.1&$-0.000143$&0.006953&0.012989&46.5\%\\
+0.5&0.000283&0.058908&0.064944&9.3\%\\
+2.0&0.010668&0.253738&0.259774&2.3\%\\
+20.0&0.323035&2.591710&2.597740&0.2\%\\\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Checkpoint-Restarted Enclosures}
+A sharper prospective bound restarts the enclosure at certified checkpoints. Fix a checkpoint $t_j$, a state estimate $\hat z_j$ with $\|z(t_j)-\hat z_j\|\le\varepsilon_j$, and a radius $R_j$ for the ball containing the true trajectory and the comparison center on $[t_j,t_j+h_j]$. Let $\ell_j=|a|+\|\Omega\|+k\lambda_N+3R_j^2$ (a Lipschitz constant of the vector field on the ball) and $v_j=\|f(\hat z_j)\|$.
+\begin{theorem}[Local signed-work enclosure]\label{th:local}
+For $0\le\tau\le h_j$ let $\rho_j(\tau)=e^{\ell_j\tau}\varepsilon_j+\tfrac{v_j}{\ell_j}(e^{\ell_j\tau}-1)$. Then
+\[
+F(z(t_j+\tau))\le u_j(\tau):=\min\Bigl\{\eta,\ F(\hat z_j)+\kappa\bigl(2\|\hat z_j\|\rho_j(\tau)+\rho_j(\tau)^2\bigr)\Bigr\},
+\]
+and if the checkpoint intervals partition $[0,H]$, $J_F(H)\le U_{\rm loc}(H)=\sum_j\int_0^{h_j}u_j(\tau)d\tau$.
+\end{theorem}
+\begin{proof}
+With $d(t)=\|z(t_j+t)-\hat z_j\|$ the integral equation gives $D^+d\le\ell_jd+v_j$ and $d(0)\le\varepsilon_j$, so Gronwall gives $d\le\rho_j$. For Hermitian $K$, $|z^*Kz-\hat z^*K\hat z|\le\kappa(2\|\hat z\|\rho+\rho^2)$. The static cap $\eta$ supplies the minimum.
+\end{proof}
+\begin{corollary}[Reserve with prefix supremum]\label{cor:prefix}
+Let $I_Q$ be a certified nondecreasing bound on $\int_0^tQ$. A sufficient reserve for every prefix of $[0,H]$ is
+\[
+E(0)-E_*\ge H\Bigl[(b-q)_++\tfrac{c_{\rm osc}}NB^2\Bigr]+c_Ak\Bigl[\tfrac{Q(0)}2+a_+I_Q(H)+\max\{0,\sup_{t\le H}U_{\rm loc}(t)\}\Bigr].
+\]
+\end{corollary}
+The supremum over prefixes is essential: each local envelope is nondecreasing within its interval, but the envelope resets after a new checkpoint, so the final signed-work bound alone need not control intermediate reserve minima.
+
+The nonlinear benchmark at $s=0.20$ with exact simulated checkpoints every $0.1$ time units and $R_j=B$ gives, against the integrated signed work $J_F$, a local bound exceeding it by about $1.09\%$ at $H=20$.
+\begin{table}[ht]\centering\small
+\caption{Local enclosure against static and initial-state caps ($s=0.20$, checkpoint spacing $0.1$, exact checkpoints).}
+\begin{tabular}{rrrrrr}\toprule
+$H$&Actual work&Static cap&Initial-state cap&Reset speed&Local bound\\\midrule
+0.1&$-0.000143$&0.012989&0.006953&0.006954&0.000080\\
+0.5&0.000283&0.064944&0.058908&0.035721&0.001169\\
+2.0&0.010668&0.259774&0.253738&0.151548&0.012867\\
+20.0&0.323035&2.597741&2.591706&1.698816&0.326550\\\bottomrule
+\end{tabular}
+\end{table}
+These are \emph{online-conditional} predictions: the checkpoints are exact simulated states, and a deployed controller would need verified state-estimation error radii and parameter bounds. The local bound is also not an actuator-energy certificate until it is combined with a valid $I_Q$.
+
+\section{Degradation under Uncertain Observation and Parameters}
+Two experiments probe the cost of imperfect information. The first sweeps checkpoint spacing $\{0.05,0.1,0.25,0.5,1\}$ against certified radius $\{0,0.001,0.005,0.01,0.025,0.05\}$ (thirty combinations) on the eight-node cycle with exact centers and an imposed allowance. The actual signed work is $0.323035$ and the static cap is $2.597741$.
+\begin{table}[ht]\centering\small
+\caption{Selected combinations of the thirty-case sweep.}
+\begin{tabular}{rrrr}\toprule
+Spacing&Radius&Local bound&Bound/actual\\\midrule
+0.05&0&0.324448&1.004\\
+0.05&0.01&0.374153&1.158\\
+0.10&0.01&0.388549&1.203\\
+0.25&0.01&0.471625&1.460\\
+0.50&0.01&1.008342&3.121\\
+1.00&0.01&1.808446&5.598\\\bottomrule
+\end{tabular}
+\end{table}
+This tests the conservatism of a certified allowance and not the accuracy of a state estimator, since the centers are not perturbed. The second experiment perturbs the reported centers by $0.85\epsilon$ in a changing complex direction and, in an uncertain-parameter case, displaces the generating parameters by $0.7d_a$, $0.65d_k$ and a frequency perturbation within $d_\omega$, with budgets $(d_a,d_\omega,d_k)=(0.01,0.02,0.02)$. The enclosure uses $m=B(d_a+d_\omega+d_k\lambda_{\max})$ as an additional forcing in the Gronwall step and an extra allowance $\lambda_{\max}d_\omega B^2$ in the commutator.
+\begin{table}[ht]\centering\small
+\caption{Perturbed checkpoints and uncertain parameters ($\Delta t=0.1$, $H=20$, sixty combinations evaluated, all enclosures exceed the actual work).}
+\begin{tabular}{lrrr}\toprule
+Condition&Actual work&Upper bound&Ratio\\\midrule
+$\epsilon=0.005$, exact parameters&0.323035&0.358343&1.11\\
+$\epsilon=0.010$, exact parameters&0.323035&0.390543&1.21\\
+$\epsilon=0.005$, uncertain parameters&0.357951&2.463582&6.88\\
+$\epsilon=0.010$, uncertain parameters&0.357951&2.496300&6.97\\\bottomrule
+\end{tabular}
+\end{table}
+Measurement displacement alone costs little at short spacing, whereas parameter uncertainty is far more damaging because the disturbance estimate allows worst-case mismatch throughout each interval. A parameter-correlated enclosure would be much sharper, which motivates Chapters~\ref{ch:params} and~\ref{ch:interval}. All budgets here are imposed and the work variable is not a calibrated physiological energy.
+\chapter{Optimal Allocation of Dissipation and Calibration against Trajectories}\label{ch:young}
+
+The direct spectral certificate \eqref{eq:direct} was obtained from a Young inequality with a fixed split, and nothing suggests that an equal split between the transient and persistent terms is best for a given reserve or supply rate. This chapter introduces a tunable allocation, rederives the resulting bound from first principles, optimizes it for the two resource questions that matter (the all-time floor under constant supply and the finite-horizon bound), and then calibrates the whole family of network certificates against numerically integrated nonlinear trajectories, including deliberately difficult initial conditions.
+
+\section{A Tunable Young Allocation}
+Retain the setting of Proposition~\ref{prop:direct}: $\beta=k-(a_++\delta)/\underline\lambda_2>0$, $F=R\|\tilde\omega\|$, $W=\tfrac12z^*Lz$ and $\mathcal Q=\|Lz\|^2$, so that $\dot W\le-\beta\mathcal Q+F\sqrt{\mathcal Q}$. Define the two coefficients
+\begin{equation}\label{eq:alpharho}
+\alpha=\frac{c_Ak^2W(0)}{\beta},\qquad \rho=\frac{c_Ak^2F^2}{\beta^2},
+\end{equation}
+so that the equal-split certificate of Proposition~\ref{prop:direct} reads $J(T)\le2\alpha+\rho T$.
+\begin{theorem}[Young-parameterized expenditure certificate]\label{th:young}
+For every $\theta\in(0,1)$ and $T\ge0$,
+\begin{equation}\label{eq:young}
+J(T)\le\frac{\alpha}{1-\theta}+\frac{\rho\,T}{4\theta(1-\theta)}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+For $x,y\ge0$ and $s>0$ one has $xy\le sx^2+y^2/(4s)$. Apply it with $x=\sqrt{\mathcal Q}$, $y=F$ and $s=\theta\beta$ to obtain $F\sqrt{\mathcal Q}\le\theta\beta\mathcal Q+F^2/(4\theta\beta)$. Then $\dot W\le-(1-\theta)\beta\mathcal Q+F^2/(4\theta\beta)$. Integrating over $[0,T]$ and discarding $W(T)\ge0$ gives $(1-\theta)\beta\int_0^T\mathcal Q\le W(0)+F^2T/(4\theta\beta)$. Dividing by $(1-\theta)\beta$ and multiplying by $c_Ak^2$ yields \eqref{eq:young}.
+\end{proof}
+At $\theta=\tfrac12$ the bound is $2\alpha+\rho T$, which reproduces \eqref{eq:direct} exactly, so the formula carries no hidden missing factor. The persistent coefficient $\rho/(4\theta(1-\theta))$ is minimized at $\theta=\tfrac12$, where it equals $\rho$, while the transient coefficient $\alpha/(1-\theta)$ increases with $\theta$. Hence a smaller $\theta$ trades a larger persistent rate for a smaller transient buffer, and the useful question is when that trade is worthwhile.
+
+\section{Optimal Choices of the Parameter}
+\begin{proposition}[Supply-matched allocation for the constant-supply floor]\label{prop:supplymatched}
+Let the net supply be constant, $s=q-b$, with $\dot E=s-c_Ak^2\mathcal Q$. For $\theta\in(0,1)$ the floor guarantee $E(t)\ge E(0)-\alpha/(1-\theta)$ for all $t\ge0$ holds whenever $s\ge\rho/(4\theta(1-\theta))$. Feasible $\theta$ exist if and only if $s\ge\rho$, they form the interval $[\theta_s,1-\theta_s]$ with
+\[
+\theta_s=\tfrac12\Bigl(1-\sqrt{1-\rho/s}\Bigr),
+\]
+and the best guaranteed buffer is
+\[
+\frac{\alpha}{1-\theta_s}=\frac{2\alpha}{1+\sqrt{1-\rho/s}}\in(\alpha,2\alpha].
+\]
+\end{proposition}
+\begin{proof}
+By \eqref{eq:young}, $E(t)=E(0)+st-J(t)\ge E(0)-\tfrac{\alpha}{1-\theta}+\bigl(s-\tfrac{\rho}{4\theta(1-\theta)}\bigr)t$, and the last bracket is nonnegative under the stated condition. The condition $4\theta(1-\theta)\ge\rho/s$ is a quadratic inequality in $\theta$ whose solution set is $[\theta_s,1-\theta_s]$ and is nonempty exactly when $\rho/s\le1$. The buffer $\alpha/(1-\theta)$ is increasing in $\theta$, so it is minimized at $\theta_s$.
+\end{proof}
+The improvement over the equal split is therefore at most a factor of two, approached as the supply grows without bound relative to the persistent rate, and it vanishes when $s=\rho$. For any real supply margin the saving is substantial: when $s\gg\rho$ the optimal buffer is close to $\alpha$, half of the equal-split value $2\alpha$.
+
+\begin{proposition}[Finite-horizon optimum]\label{prop:finiteyoung}
+Put $\kappa=\rho T/4$. For fixed $T>0$ the bound \eqref{eq:young} equals $(\alpha+\kappa)/(1-\theta)+\kappa/\theta$ and is minimized at
+\[
+\theta^*(T)=\frac{\sqrt\kappa}{\sqrt\kappa+\sqrt{\alpha+\kappa}},\qquad J(T)\le\bigl(\sqrt{\alpha+\kappa}+\sqrt\kappa\bigr)^2.
+\]
+This is never larger than the equal-split value $2\alpha+4\kappa$, with equality if and only if $\alpha=0$.
+\end{proposition}
+\begin{proof}
+Write $\alpha/(1-\theta)+\kappa/(\theta(1-\theta))=\alpha/(1-\theta)+\kappa[1/\theta+1/(1-\theta)]=(\alpha+\kappa)/(1-\theta)+\kappa/\theta$. Setting the derivative of $c/(1-\theta)+\kappa/\theta$ to zero gives $c/(1-\theta)^2=\kappa/\theta^2$, hence $\theta/(1-\theta)=\sqrt{\kappa/c}$ for $c=\alpha+\kappa$, which is the stated $\theta^*$, and the value is $c/(1-\theta^*)+\kappa/\theta^*=(\sqrt c+\sqrt\kappa)^2$. By the arithmetic--geometric mean inequality $\sqrt{\kappa(\alpha+\kappa)}\le\kappa+\alpha/2$, so $(\sqrt{\alpha+\kappa}+\sqrt\kappa)^2=\alpha+2\kappa+2\sqrt{\kappa(\alpha+\kappa)}\le2\alpha+4\kappa$ with equality only when $\alpha=0$.
+\end{proof}
+On short horizons ($\kappa\ll\alpha$) the bound tends to $\alpha$, a factor of two below the equal split, and the optimal parameter tends to zero. On long horizons ($\kappa\gg\alpha$) one has $(\sqrt{\alpha+\kappa}+\sqrt\kappa)^2\approx4\kappa+2\alpha$, which coincides with the equal split to leading order, and $\theta^*\to\tfrac12$. The allocation therefore matters for the transient and does not touch the persistent rate, which is the quantity limiting long-horizon performance.
+
+\section{Numerical Results for the Four-Node Networks}
+The experiment uses the data of the four-node examples of Chapter~\ref{ch:network}: $a=0.19$, $k=0.7$, $c_A=0.1$, $R=0.45$, $\omega=(-0.03,-0.01,0.01,0.03)$, $z(0)=(0.45,0.21,0.39,0.27)$, $s=0.005$, $E(0)=0.1$ and the certified spectral-gap lower bounds $0.585$, $2$, $4$. Rational arithmetic is used throughout, with square roots rounded upward at $2^{-80}$, and the equal-split baseline reproduces the buffers $0.015792$, $0.011361$, $0.010940$ and the rates $0.0001891$, $0.0000570$, $0.0000477$ of Chapter~\ref{ch:network}.
+\begin{table}[ht]\centering\small
+\caption{Supply-matched allocation (Proposition~\ref{prop:supplymatched}) for $s=0.005$.}\label{tab:youngdata}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}\toprule
+Graph&$\beta$&$\theta_s$&Buffer, $\theta=\tfrac12$&Buffer, optimized&Ratio&Floor, $\theta=\tfrac12$&Floor, optimized\\\midrule
+Path&0.32393&0.009547&0.015792&0.007972&0.5048&0.084208&0.092028\\
+Cycle&0.59000&0.002859&0.011361&0.005697&0.5014&0.088639&0.094303\\
+Complete&0.64500&0.002391&0.010940&0.005483&0.5012&0.089060&0.094517\\\bottomrule
+\end{tabular}}
+\end{table}
+Because the supply exceeds the persistent rates by more than an order of magnitude, the optimized buffers are within one percent of the theoretical limit $\alpha$, which is half the equal-split value. The resource floor on the path rises from $0.0842$ to $0.0920$.
+\begin{table}[ht]\centering\small
+\caption{Finite-horizon bounds (Proposition~\ref{prop:finiteyoung}) against the equal split.}
+\begin{tabular}{lrrrr}\toprule
+Graph&$T$&$\theta^*(T)$&Optimized bound&Equal-split bound\\\midrule
+Path&1&0.0716&0.009216&0.015981\\
+Path&5&0.1457&0.011142&0.016738\\
+Path&20&0.2464&0.015570&0.019575\\
+Path&100&0.3796&0.032804&0.034705\\
+Cycle&1&0.0476&0.006279&0.011418\\
+Cycle&5&0.1002&0.007104&0.011646\\
+Cycle&20&0.1794&0.008859&0.012502\\
+Cycle&100&0.3093&0.014896&0.017062\\
+Complete&1&0.0446&0.006005&0.010987\\
+Complete&5&0.0941&0.006737&0.011178\\
+Complete&20&0.1697&0.008280&0.011894\\
+Complete&100&0.2973&0.013492&0.015710\\\bottomrule
+\end{tabular}
+\end{table}
+The optimal parameter increases from near zero at $T=1$ toward $\tfrac12$ as the horizon grows, as the asymptotics predicted, and the optimized bound recomputed at $\theta^*$ agrees with the closed form to machine precision. The gain falls from $42$ to $45\%$ at $T=1$ to about $5$ to $14\%$ at $T=100$.
+
+\section{Calibration against Integrated Trajectories}
+Conservatism can be measured only against actual expenditure. The calibration study integrates the full nonlinear complex system \eqref{eq:hetnet} together with $J'=c_Ak^2\|Lz\|^2$ (adaptive eighth-order Runge--Kutta of Dormand--Prince type, relative tolerance $10^{-11}$) on the three four-node graphs, at the reference frequencies and at three times their dispersion, from nine initial states: the reference real state, the same moduli with prescribed phases, three random states with moduli at most $0.45$, an alternating state $(0.45,-0.45,0.45,-0.45)$ that places maximal disagreement in the highest graph mode, a state along the Fiedler direction scaled to modulus $0.45$, a near-synchronized state, and a small-amplitude state with all moduli $0.01$. Expenditure was recorded at $T\in\{1,5,20,100\}$. For each case three certificates were evaluated with the same amplitude bound $R=\max\{\max_i|z_i(0)|,\sqrt a\}$ and the same certified spectral enclosures: the equal-split direct bound, the optimized bound of Proposition~\ref{prop:finiteyoung}, and the disagreement-route bound of Proposition~\ref{prop:persistent}. All $216$ comparisons satisfy certificate $\ge$ actual expenditure, which is a consistency check of the analysis and not a proof.
+\begin{table}[ht]\centering\small
+\caption{Median ratio of certificate to actual expenditure over the states with expenditure above $10^{-6}$, at the reference frequencies. Equal-split / optimized.}
+\begin{tabular}{lccc}\toprule
+Graph&$T=1$&$T=20$&$T=100$\\\midrule
+Path&4.6 / 2.4&4.1 / 2.6&4.2 / 3.2\\
+Cycle&2.4 / 1.2&2.2 / 1.3&2.1 / 1.5\\
+Complete&2.1 / 1.1&2.1 / 1.2&2.0 / 1.3\\\bottomrule
+\end{tabular}
+\end{table}
+\begin{table}[ht]\centering\small
+\caption{Ratio of certificate to actual expenditure at $T=20$, reference frequencies. For each graph: optimized direct certificate, then disagreement-route certificate.}
+\begin{tabular}{lrrrrrr}\toprule
+&\multicolumn{2}{c}{Path}&\multicolumn{2}{c}{Cycle}&\multicolumn{2}{c}{Complete}\\
+Initial state&direct&route&direct&route&direct&route\\\midrule
+Reference, real&3.9&55.2&1.7&4.2&1.5&1.4\\
+Reference, with phases&2.6&25.6&1.3&4.1&1.2&1.1\\
+Random 1&2.6&21.6&1.3&3.9&1.2&1.1\\
+Random 2&2.5&32.1&1.3&4.3&1.2&1.1\\
+Random 3&2.7&31.8&1.3&4.6&1.2&1.1\\
+Alternating, maximal&2.4&16.2&1.3&2.4&1.1&1.1\\
+Fiedler direction&2.4&71.6&1.3&4.9&1.2&1.1\\
+Near-synchronized&6.1&278.4&1.6&10.8&1.3&2.3\\
+Small amplitude&90.3&3971.1&21.0&130.1&16.0&26.1\\\bottomrule
+\end{tabular}
+\end{table}
+Four conclusions follow, each limited to this configuration. First, on the cycle and the complete graph the optimized direct certificate lies within $1.1$ to $1.7$ of the actual expenditure for every well-excited state, so for these networks the certificate is already close to sharp, and the remaining gap is of the size the Young optimization can account for. Second, on the path the median ratio of $2.3$ to $3.2$ is larger, and at triple frequency dispersion the ratio at $T=100$ rises to about $11$ for the reference state, with the optimized and equal-split values nearly equal (10.98 against 10.99). When the two coincide the persistent term dominates, so the residual conservatism is not attributable to the allocation of dissipation. Third, the direct certificate is dramatically tighter than the disagreement route on the path ($55.2$ against $3.9$ for the reference state), confirming that conversion through $\lambda_N^2$ is the dominant loss for graphs with spread spectrum, and the routes coincide on the complete graph. Fourth, the large ratios for the near-synchronized and small-amplitude states are caused by the amplitude bound and by frequency forcing taken at its worst case, not by the allocation. In the small-amplitude case the actual state is far inside the ball of radius $R=\sqrt{0.19}$ used by the certificate, and in the near-synchronized case the transient buffer is negligible, so equal-split and optimized values agree.
+
+\section{A Mode-Resolved Allocation}
+The Young allocation above treats the forcing as a single vector of norm $F$. A finer allocation lets each Laplacian mode keep its own dissipation margin. Let $u_j$ be orthonormal eigenvectors for $\lambda_j$, $j\ge2$, let $\tilde\omega_j=\langle u_j,\tilde\omega\rangle$, and set $y_j=\lambda_j|\xi_j|$ with $\xi_j=\langle u_j,z\rangle$, so that $\mathcal Q=\sum_jy_j^2$. Define the modal margins
+\[
+\beta_j=k-\frac{a_+}{\lambda_j}-\frac{\delta}{\underline\lambda_2},\qquad \beta_2=\beta,
+\]
+and assume $\beta_j>0$ for all $j\ge2$.
+\begin{theorem}[Mode-resolved direct certificate]\label{th:moderes}
+For every $\beta_\ast\in(0,\min_j\beta_j)$ and every $T\ge0$,
+\[
+J(T)\le\frac{c_Ak^2}{\beta_\ast}\Bigl(W(0)+T\,P(\beta_\ast)\Bigr),\qquad P(\beta_\ast)=\sum_{j\ge2}\frac{R^2\tilde\omega_j^2}{4(\beta_j-\beta_\ast)}.
+\]
+\end{theorem}
+\begin{proof}
+The growth term is $a\,z^*Lz=a\sum_jy_j^2/\lambda_j\le a_+\sum_jy_j^2/\lambda_j$, the coupling term is $-k\sum_jy_j^2$, the cubic term is nonpositive, and the part of the frequency work acting on the disagreement component is at most $(\delta/\underline\lambda_2)\sum_jy_j^2$ as in Proposition~\ref{prop:direct}. The part acting on the mean $m$ with $|m|\le R$ equals $\re\sum_j\lambda_j\bar\xi_j\ii m\tilde\omega_j\le R\sum_j|\tilde\omega_j|y_j$. Hence $\dot W\le-\sum_j\beta_jy_j^2+R\sum_j|\tilde\omega_j|y_j$. Young's inequality applied mode by mode with weight $\beta_j-\beta_\ast$ gives $R|\tilde\omega_j|y_j\le(\beta_j-\beta_\ast)y_j^2+R^2\tilde\omega_j^2/(4(\beta_j-\beta_\ast))$, so $\dot W\le-\beta_\ast\mathcal Q+P(\beta_\ast)$. Integrating and using $W(T)\ge0$ gives $\beta_\ast\int_0^T\mathcal Q\le W(0)+TP(\beta_\ast)$.
+\end{proof}
+When the forcing lies in a single mode, taking $\beta_\ast=(1-\theta)\beta$ recovers the Young bound exactly. When the margins $\beta_j$ coincide, as on the complete graph, no gain is possible. The gain arises when forcing weight sits in modes with larger eigenvalues and hence larger margins. The bound is minimized over $\beta_\ast$ by a one-dimensional search, and every value of $\beta_\ast$ gives a valid bound.
+
+The comparison against the Young-optimized global bound used the same four-node graphs, three initial states each (aligned, alternating, random), horizons $T\in\{1,5,20,100\}$, and four frequency patterns: the reference pattern at scales $1$ and $3$, and an alternating pattern $\pm0.03$ at scales $1$ and $3$. All $144$ bounds of both kinds are at least the integrated expenditure.
+\begin{table}[ht]\centering\small
+\caption{Median reduction of the mode-resolved bound relative to the Young-optimized direct bound, in percent, over states and horizons.}
+\begin{tabular}{lrrrr}\toprule
+Graph&Reference&Reference $\times3$&Alternating&Alternating $\times3$\\\midrule
+Path&0.04&0.18&12.56&40.36\\
+Cycle&0.87&1.36&8.09&9.62\\
+Complete&0.00&0.00&0.00&0.00\\\bottomrule
+\end{tabular}
+\end{table}
+The reduction reaches $61.6\%$ at its largest, on the path graph with the alternating pattern. For the smooth reference pattern, whose weight lies mostly in the Fiedler mode, the gain is under $3\%$, so the persistent slack seen in the calibration is not mostly a mode-allocation effect for that pattern. The result is therefore a statement about patterns that excite higher modes, and the earlier remaining conservatism for smooth patterns lies in the global amplitude bound $R$ and in the shared $\delta/\underline\lambda_2$ term, which this allocation leaves untouched.
+
+\section{A Time-Dependent Amplitude Envelope}
+The constant $R=\max\{\max_i|z_i(0)|,\sqrt{a_+}\}$ in the forcing term is conservative for any trajectory that starts away from the limit-cycle amplitude, and especially for a small initial state, since the mean $m$ satisfies $|m|\le\max_i|z_i|$ and the maximum modulus is itself bounded by a decaying or growing envelope.
+\begin{proposition}[Amplitude envelope]\label{prop:envelope}
+Let $a>0$ and $M_0=\max_i|z_i(0)|>0$, and set $c=1-a/M_0^2$. If $M_0=0$ the solution is identically zero, since $z=0$ is an equilibrium of the system and solutions are unique, and the envelope is not needed. For every $t\ge0$, $\max_i|z_i(t)|^2\le R(t)^2=a/(1-ce^{-2at})$, and
+\[
+\int_0^TR(t)^2\,dt=\tfrac12\ln\frac{e^{2aT}-c}{1-c}.
+\]
+\end{proposition}
+\begin{proof}
+At a node of maximal modulus the diffusive coupling contributes $-k\sum_j(|z_i|^2-\re\bar z_iz_j)/|z_i|\le0$ to the upper Dini derivative of $M=\max_i|z_i|$, so $\dot M\le aM-M^3$. The right side is the Bernoulli equation whose solution is $R(t)$, and comparison gives $M\le R$. The integral follows from $\tfrac{d}{dt}\ln(e^{2at}-c)=2a/(1-ce^{-2at})$.
+\end{proof}
+Substituting $R(t)$ for $R$ in the proofs of Proposition~\ref{prop:direct}, Theorem~\ref{th:young} and Theorem~\ref{th:moderes} changes only the integration of the forcing term, so $R^2T$ is replaced by $\int_0^TR(t)^2\,dt$ in every persistent coefficient, with all other quantities unchanged. The allocation parameter $\theta$ or $\beta_\ast$ remains constant in time, and the closed-form optima of this chapter apply with $\kappa=c_Ak^2\|\tilde\omega\|^2\int_0^TR^2/(4\beta^2)$.
+
+The test set was the four-node graphs at frequency scales $1$ and $3$, five initial states with maximum modulus $0.45$ (two states), $0.20$, $0.05$ and $0.01$, and $T\in\{1,5,20,100\}$. All $120$ bounds of all four variants lie at or above the integrated expenditure.
+\begin{table}[ht]\centering\small
+\caption{Median reduction in percent of the Young-optimized direct bound when the constant $R$ is replaced by the envelope $R(t)$, by initial maximum modulus.}
+\begin{tabular}{lrrrr}\toprule
+Initial modulus&$T=1$&$T=5$&$T=20$&$T=100$\\\midrule
+0.45&0.12&0.83&2.33&4.30\\
+0.20&5.52&8.52&5.14&1.99\\
+0.05&38.63&61.24&44.85&10.74\\
+0.01&87.02&96.19&89.14&19.80\\\bottomrule
+\end{tabular}
+\end{table}
+The gain is negligible for states near the limit-cycle amplitude, which is the regime of the four-node reference examples, and it is large for small initial states over moderate horizons, where the constant $R$ greatly overstates how much the mean can contribute early on. At $T=100$ the envelope has converged to $\sqrt a$ and the gain falls. Combining the envelope with Theorem~\ref{th:moderes} reduces the bound by up to $99.4\%$ in the most favourable test case. These reductions should not be read as typical, because the favourable cases combine small initial amplitude with forcing in higher modes.
+
+\section{What the Calibration Implies}
+The results sort the sources of conservatism. The Young allocation can recover at most a factor of two and only on the transient term, which is substantial for reserve sizing at short horizons but irrelevant to long-horizon performance. The conversion from disagreement to expenditure has been largely removed by the direct route. What remains, and what limits the path and the small-amplitude cases, is the persistent forcing coefficient $\rho$, which depends on the global amplitude bound $R$ and the full norm $\|\tilde\omega\|$ and uses neither the actual excitation of the graph modes nor the realized amplitude. Further theoretical refinement is therefore worthwhile only on that term. Two directions follow from the data. A mode-resolved forcing certificate that weights each Laplacian eigenmode of the frequency pattern by the available dissipation in that mode, combining the graph-resolved metric of Proposition~\ref{prop:graphaware} with the direct edge-energy method, targets exactly the path case, where the spectral spread is large. A state-dependent amplitude bound, obtained from the transverse envelope of Theorem~\ref{th:trans} and a decaying amplitude estimate in place of the uniform $R$, targets the small-amplitude and near-collapse cases. Both are stated as open problems in Chapter~\ref{ch:synthesis}. A third direction, treating time-varying supply and a state-dependent coupling $k(E)$, would bring the model closer to the original resource-constrained problem and requires a Lyapunov argument in which $\beta$ varies with the reserve, so the equal-split and optimized formulas would have to be recomputed along the trajectory of the controller.
+\part{Reduced Systems and Parameter Uncertainty}
+
+\chapter{Dissipation Certificates for the Two-Oscillator Reduction}\label{ch:reduced}
+
+For two identical real oscillators the disagreement equation decouples enough that exact dissipation arguments are available, and uniform-in-time expenditure bounds can be obtained without any numerical integration. This chapter derives them. The same reduced system is used in Chapters~\ref{ch:interval} and~\ref{ch:frames} as the testbed on which validated propagators are compared, and the dissipation bounds here serve as an analytic benchmark for them.
+
+\section{The Reduced System and an Invariant Region}
+Take $u'=au-u^3-k(u-v)$, $v'=av-v^3-k(v-u)$ and $J'=2c_Ak^2(u-v)^2$, with $a\in[0.15,0.19]$ constant along each trajectory, $k=0.7$, $c_A=0.1$. In collective and disagreement coordinates $p=(u+v)/2$ and $m=(u-v)/2$,
+\begin{equation}\label{eq:pm}
+p'=ap-p^3-3pm^2,\qquad m'=-(2k-a+3p^2+m^2)\,m,\qquad J'=8c_Ak^2m^2=:Cm^2,
+\end{equation}
+with $C=0.392$. Initial uncertainty is $p(0)\in[0.329,0.331]$, $m(0)\in[0.119,0.121]$, $J(0)=0$. The resource is $E'=q-b-J'$ with $E(0)=0.1$, $q=0.01$, $b=0.005$ and floor $E_*=0.08$.
+
+\begin{proposition}[Invariant half-strip]\label{prop:strip}
+The region $\{p\ge0.325,\ 0\le m\le0.121\}$ is forward invariant for every fixed $a\in[0.15,0.19]$.
+\end{proposition}
+\begin{proof}
+At $p=0.325$ one has $p'/p\ge0.15-0.325^2-3(0.121)^2=0.000452>0$, at $m=0.121$ the factor $2k-a+3p^2+m^2$ is positive so $m'<0$, and $m=0$ is invariant. The polynomial vector field is locally Lipschitz, and the dissipative cubic terms with bounded $m$ prevent finite-time escape of $p$.
+\end{proof}
+On the strip, $D:=2k-a+3p^2+m^2\ge D_0:=1.4-0.19+3(0.325)^2=1.526875=2443/1600$.
+
+\section{The Joint Dissipation Certificate}
+Let $V=m^2$. Then $V'=-2DV$ and $J'=CV$, so the combined observable $\mathcal W=J+\tfrac{C}{2D_0}V$ satisfies $\mathcal W'=CV(1-D/D_0)\le0$.
+\begin{theorem}[Joint dissipation bound]\label{th:joint}
+For every $t\ge0$ and every admissible $a$ and initial state,
+\begin{gather*}
+J(t)+\tfrac{C}{2D_0}m(t)^2\le\tfrac{C}{2D_0}m(0)^2,\\
+\text{hence}\qquad J(t)\le\frac{0.392\,(0.121)^2}{2\cdot1.526875}=\frac{102487}{54531250}\approx0.001879417765.
+\end{gather*}
+\end{theorem}
+The uniform energy bound follows at once: since the net supply $q-b=0.005$ is nonnegative, $E(t)\ge0.1-J(\infty)\ge0.098120582>0.08$ for all $t\ge0$. This improves the best fixed-affine validated enclosure at $H=2$ ($0.002081170556$, Chapter~\ref{ch:frames}) by about $9.69\%$ and, unlike that enclosure, holds for all time. The bound is conservative because it replaces the state-dependent dissipation $D(t)$ by its lower bound.
+
+\section{Time-Dependent Dissipation and Riccati Comparison}
+The constant $D_0$ ignores two facts: the collective variable $p$ increases after a transient, and $D$ contains $m^2$ itself. Both can be exploited with a comparison argument.
+\begin{proposition}[Later lower bound on $p$]\label{prop:laterp}
+For $t\ge0.5$ and $p\in[0.325,0.329]$ one has $p'\ge0.325[0.15-0.329^2-3M e^{-D_0}]>0.0104709591$, with $M=0.121^2$. The minimum increase over the next half-unit exceeds $0.00523547$, which is greater than the strip width $0.004$, so a first-crossing argument gives $p(t)\ge0.329$ for $t\ge1$. Consequently $D\ge D_1:=1.534723$ for $t\ge1$.
+\end{proposition}
+Since $D=(2k-a+3p^2)+m^2$ with the bracket bounded below by $D_0$ or $D_1$, $V'\le-2(D_\bullet+V)V$, and comparison with the scalar Riccati equation gives
+\[
+V_D(t;v)=\frac{Dve^{-2Dt}}{D+v(1-e^{-2Dt})},\qquad\int_0^\infty V_D\,dt=\tfrac12\log\bigl(1+v/D\bigr).
+\]
+\begin{theorem}[Riccati and piecewise-Riccati certificates]\label{th:riccati}
+With $V_0=0.121^2$,
+\[
+J(\infty)\le\tfrac C2\log\bigl(1+V_0/D_0\bigr)\quad\text{(constant Riccati)},
+\]
+and, with $v_1=V_{D_0}(1;V_0)$,
+\[
+J(\infty)\le\tfrac C2\Bigl[\log\bigl(1+V_0/D_0\bigr)-\log\bigl(1+v_1/D_0\bigr)+\log\bigl(1+v_1/D_1\bigr)\Bigr]\quad\text{(piecewise Riccati)}.
+\]
+The two-stage exponential certificate $J(\infty)\le\tfrac{CM}2[(1-e^{-2D_0})/D_0+e^{-2D_0}/D_1]$ is also valid, and these bounds are separately valid and must not be added.
+\end{theorem}
+\begin{table}[ht]\centering\small
+\caption{Uniform expenditure certificates and resulting energy floors for the two-oscillator reduction. All inequality checks are evaluated with exact fractions, with exponentials and logarithms bounded by alternating rational series.}
+\begin{tabular}{lrr}\toprule
+Certificate&$J$ upper bound&Uniform $E$ floor\\\midrule
+Constant $D_0$ (joint dissipation)&0.001879417765&0.098120582235\\
+Two-stage $D(t)$&0.001878964319&0.098121035681\\
+Constant Riccati&0.001870464213&0.098129535787\\
+Piecewise Riccati&0.001870015073&0.098129984927\\\bottomrule
+\end{tabular}
+\end{table}
+The successive refinements differ in the fourth significant digit, the largest gain coming from retaining $m^2$ inside the dissipation rate, and the piecewise Riccati sharpening improves the constant-Riccati bound by about $0.024\%$. These are certificates for the reduced real system with its assumed parameter range, and no biological calibration is implied. The piecewise bound inherits Propositions~\ref{prop:strip} and~\ref{prop:laterp} as premises.
+
+\section{Role as a Benchmark}
+The analytic bound $0.00187$ is very close to the true expenditure scale of this system, since $J(\infty)=C\int_0^\infty m^2dt$ and $m$ decays at rate at least $D_0\approx1.53$. It therefore provides an independent standard against which the finite-horizon enclosures of Chapters~\ref{ch:interval} and~\ref{ch:frames} can be judged: their upper bounds on $J(2)$ near $0.00208$ are valid but about $11\%$ above the all-time analytic ceiling $0.00187$, so the true $J(2)$ lies below that ceiling and the excess measures the overestimation of the enclosure itself. This is a useful reminder that a validated numerical enclosure is a different kind of object from a certificate, and the two are complementary.
+\chapter{Persistent Parameters and Set-Valued Inference}\label{ch:params}
+
+Every certificate of the preceding chapters assumed that the growth rate, coupling and frequency pattern are known, or bounded by a worst-case interval that may vary in time. In practice the parameters are fixed but uncertain, and repeated observation of the same trajectory should narrow them. Treating the uncertainty as an independent disturbance at each checkpoint discards exactly that persistence, and Chapter~\ref{ch:signed} showed the cost. This chapter formalizes persistent parameters and examines how much a sequence of noisy observations can certify, reporting a negative result alongside the positive ones.
+
+\section{Feasible Sets in the Product Space}
+Let $z\in\C^N$ and $\theta=(a,k,s)\in\Theta_0\subset\R^3$ with
+$\dot z=f_\theta(z)=(a+\ii s\operatorname{diag}(\nu))z-|z|^2z-kLz$, where $\nu$ is a known frequency template and the parameter is constant for the whole experiment. Observations $y_j$ satisfy $\|z(t_j)-y_j\|\le\epsilon_j$. The exact feasible set is a subset of the product space and not a product of independently estimated intervals:
+\begin{align}
+\mathcal S_0&=\{(z,\theta):z\in Z_0,\ \theta\in\Theta_0,\ \|z-y_0\|\le\epsilon_0\},\\
+\mathcal S_{j+1}&=\{(\Phi^\theta_{h_j}(z),\theta):(z,\theta)\in\mathcal S_j,\ \|\Phi^\theta_{h_j}(z)-y_{j+1}\|\le\epsilon_{j+1}\},\label{eq:jointrec}
+\end{align}
+with $\Phi^\theta_h$ the flow.
+\begin{theorem}[Soundness and persistence]\label{th:jointsound}
+If the true trajectory obeys the model with a fixed $\theta_\star\in\Theta_0$, begins in $Z_0$, and every observation error is within budget, then $(z(t_j),\theta_\star)\in\mathcal S_j$ for every checkpoint. The projections $\operatorname{proj}_\theta\mathcal S_j$ contain $\theta_\star$ and are nested.
+\end{theorem}
+\begin{proof}
+The claim holds initially. If the true pair lies in $\mathcal S_j$, the true flow carries it to the next state, and the observation inequality retains it under \eqref{eq:jointrec}. Because the same parameter appears in every update, projection onto parameters can only remove candidates.
+\end{proof}
+Replacing $\mathcal S_j$ by $\operatorname{proj}_z\mathcal S_j\times\operatorname{proj}_\theta\mathcal S_j$ remains a valid outer enclosure but combines a state reached under one parameter with a parameter that never generated that state, and thereby forfeits the temporal consistency the construction exists to exploit.
+
+\section{Velocity Observations and the Failure of State-Only Differences}
+If a measured velocity $v_j$ satisfies $\|v_j-f_\theta(x_j)\|\le\eta_j$ at an exact state $x_j$, the parameter set is cut by the constraint $\|v_j+|x_j|^2x_j-[x_j,-Lx_j,\ii\operatorname{diag}(\nu)x_j]\theta\|\le\eta_j$, a convex set in $\theta$ because the model is linear in $(a,k,s)$. Replacing the Euclidean norm by componentwise bounds yields a polytope amenable to linear programming. Persistent soundness and nesting hold exactly as in Theorem~\ref{th:jointsound}, and a state error of radius $\epsilon_j$ adds an allowance $\ell\epsilon_j$ when $f_\theta$ is $\ell$-Lipschitz on the certified enclosure.
+
+State-only checkpoints lead to a finite-difference velocity $\hat v=(\hat z(t+h)-\hat z(t))/h$. With $\|z\|\le B$, $\|f_\theta\|\le M$ and Lipschitz constant $\ell$, the integral equation gives
+\begin{equation}\label{eq:fd}
+\|\hat v-f_\theta(\hat z(t))\|\le\frac{2\epsilon}h+\ell\epsilon+\frac{\ell Mh}2,
+\end{equation}
+which is valid but imposes competing demands: the first term needs large $h$ and the last needs small $h$. For the eight-node cycle with $\theta_0=(0.15,1,0.20)$, prior half-widths $(0.01,0.02,0.02)$, generating $\theta_\star=(0.157,1.013,0.212)$ and forty-one observation pairs over four time units, the state-only certificate does not contract any prior interval for any tested $\epsilon\in\{0,10^{-6},10^{-5},10^{-4}\}$ and $h\in\{0.001,0.005,0.02\}$. Even at $\epsilon=0$ and $h=0.001$ the certified coordinatewise residual radius is $0.02695$, which leaves the whole prior box feasible. Independently measured velocities with a certified error budget do contract it.
+\begin{table}[ht]\centering\small
+\caption{Parameter intervals after velocity observations. All intervals contain $\theta_\star$; the displaced velocity observations are shifted by $0.7\eta$ in changing complex directions.}
+\begin{tabular}{@{}lccc@{}}\toprule
+$\eta$&Growth $a$&Coupling $k$&Frequency scale $s$\\\midrule
+$10^{-5}$&$[0.156975,0.157025]$&$[1.012904,1.013113]$&$[0.211972,0.212028]$\\
+$10^{-4}$&$[0.156750,0.157248]$&$[1.012040,1.014128]$&$[0.211719,0.212278]$\\
+$10^{-3}$&$[0.154503,0.159481]$&$[1.003402,1.020000]$&$[0.209189,0.214783]$\\\bottomrule
+\end{tabular}
+\end{table}
+Because the frequency work operator scales as $K(s)=sK(1)$ for the template $\Omega=s\operatorname{diag}(\nu)$, an admissible interval $[s_-,s_+]$ can replace the prior frequency interval in any robust work envelope of Chapter~\ref{ch:signed}. No improved resource figure is claimed here, since the experiments test identifiability and enclosure tightness and not a recomputed energy certificate.
+
+\section{Joint State--Parameter Screening}
+A finite-candidate screening on a $7^3$ Cartesian grid of $\theta$ values, augmented by $\theta_\star$ as an audit control, evolves each candidate under its own unchanging parameter and discards it when its predicted checkpoint state differs from the observation by more than the certified radius. With the initial state known exactly, observations every $0.2$ time units through $t=4$, perturbation norm $0.0065$ and radius $0.01$:
+\begin{table}[ht]\centering\small
+\caption{Retained candidates of $344$ after joint state--parameter screening. The generating parameter is retained at every time.}
+\begin{tabular}{rrl}\toprule
+Time&Retained candidates&Retained growth interval\\\midrule
+0.0&344&$[0.140000,0.160000]$\\
+0.8&162&$[0.146667,0.160000]$\\
+1.6&59&$[0.153333,0.160000]$\\
+2.8&15&$[0.156667,0.157000]$\\
+4.0&12&$[0.156667,0.157000]$\\\bottomrule
+\end{tabular}
+\end{table}
+At $t=4$ the surviving frequency-scale range is about $[0.2067,0.2133]$, while the coupling range stays $[0.98,1.02]$, which indicates weak excitation of coupling-sensitive directions. These extrema describe sampled candidates and are not certified bounds on the continuous true parameter set, and retention of the audit control demonstrates consistency and not that the method cannot falsely exclude an unsampled admissible parameter. The comparison with the state-only failure above shows that retaining the state--parameter correlation recovers discrimination that the finite-difference route cannot, but it does so only at sampled parameters.
+
+\section{Parameter-Dependent Taylor Enclosures}
+For one scalar parameter $a\in A=[a_-,a_+]$ fixed along the trajectory, let $Z(t,a)$ be the flow, $S=\partial_aZ$ and $T=\partial_a^2Z$. Differentiating the real $2N$-dimensional equation gives
+\[
+\dot S=D_zf(Z,a)S+Z,\quad\dot T=D_zf(Z,a)T+D_z^2f(Z,a)[S,S]+2S,\quad S(0)=T(0)=0,
+\]
+where $D_zf(Z,a)v=(a+\ii s\nu)v-2|Z|^2v-Z^2\bar v-kLv$ componentwise. The second variation does not follow from treating $|z|^2z$ as holomorphic. Set $B=\max\{\|z_0\|,\sqrt{N(a_+)_+}\}$, $\Lambda=a_{\rm abs}+|s|\|\nu\|_\infty+k\lambda_N+3B^2$, and let $U,V$ solve $U'=\Lambda U+B$ and $V'=\Lambda V+6BU^2+2U$ with zero initial values.
+\begin{theorem}[Parameter-dependent Taylor enclosure]\label{th:taylor}
+For $a,a_0\in A$, $\|Z(t,a)-Z(t,a_0)-(a-a_0)S(t,a_0)\|\le\tfrac12V(t)|a-a_0|^2$. A parameter cell $C=[m-\varrho,m+\varrho]\subset A$ has the outer enclosure $\mathcal E_C(t)=\overline B\bigl(Z(t,a_0)+(m-a_0)S(t,a_0),\ \|S(t,a_0)\|\varrho+\tfrac12V(t)(|m-a_0|+\varrho)^2\bigr)$, and the cell may be discarded when $\mathcal E_C(t_j)$ is disjoint from $\overline B(y_j,\epsilon_j)$.
+\end{theorem}
+\begin{proof}
+On the ball $\|D_zf\|\le\Lambda$ and $\|D_z^2f[v,v]\|\le6B\|v\|^2$. Gronwall comparison bounds $\|S\|\le U$ and $\|T\|\le V$ uniformly in $a$, and Taylor's integral remainder in the real parameter gives the first claim. Splitting $a-a_0=(m-a_0)+(a-m)$ gives the cell enclosure, and disjoint closed balls cannot contain a common exact state.
+\end{proof}
+Expanding at the cell midpoint instead of a common anchor makes the remainder scale with $\varrho^2$ and removes the anchor distance.
+\begin{theorem}[Cell-centered enclosure]\label{th:cellcentered}
+For $C=[m-\varrho,m+\varrho]$ and every $a\in C$, $\|Z(t,a)-Z(t,m)-(a-m)S(t,m)\|\le\tfrac12V(t)\varrho^2$, so the image of $C$ lies in $\overline B(Z(t,m),\ \|S(t,m)\|\varrho+\tfrac12V(t)\varrho^2)$. A cell is excluded when $\|Z(t_j,m)-y_j\|>\|S(t_j,m)\|\varrho+V(t_j)\varrho^2/2+\epsilon_j$.
+\end{theorem}
+On the three-node path with $k=0.7$, $s=0.16$, $\nu=(-1,0,1)$, $z_0=(0.45+0.10\ii,0.21-0.06\ii,0.33+0.04\ii)$, $A=[0.12,0.22]$, $a_\star=0.173$ and observation radius $0.003$, the common-anchor enclosure of Theorem~\ref{th:taylor} retains $68,36,28,122$ of $128$ cells at times $0.2,0.4,0.6,0.8$, with the last number showing loss of discrimination because the global majorant $V$ reaches $43.9$. Cell-centering retains $67,35,24,19$, and intersecting cells across all checkpoints (persistent retention) keeps the same counts. The generating cell survives in every test. Cell-centering therefore removes the failure at the longest time, although $V$ itself remains loose. The floating-point integration of the nominal flows is not outward rounded, so these counts are numerical demonstrations and not formally certified exclusions.
+
+\section{A Negative Result: Global Lipschitz Enclosures Retain Everything}
+A Euler-based continuous-cell scheme gives an enclosure in exact real arithmetic under explicit bounds. Let the cell have center $\bar a$ and half-width $\varrho$, let $x_{n+1}=x_n+hf_{\bar a}(x_n)$ and
+\[
+r_{n+1}=(1+h\Lambda)r_n+h\varrho B+\tfrac12h^2M,
+\]
+with $\|\ddot z\|\le M=\Lambda F_\star$ and $F_\star$ the speed bound. Then $\|z(t_n)-x_n\|\le r_n$ for every $a$ in the cell, and a cell is discarded only when $\|x_n-y_j\|>r_n+\epsilon_j$. On the same three-node system with the continuous prior $[0.12,0.22]$, known initial state, observations at $t=0,0.2,\dots,0.8$ of norm $0.35\epsilon$ with $\epsilon=0.003$ and step $0.002$, the constants are $B\approx0.8124$, $\Lambda=4.46$, $F_\star\approx2.551$ and $M\approx11.38$.
+\begin{table}[ht]\centering\small
+\caption{Continuous-cell Euler enclosure: subdivision does not discriminate.}
+\begin{tabular}{@{}rrrr@{}}\toprule
+Parameter cells&Retained cells&Final enclosure radius&True cell retained\\\midrule
+8&8&0.125031&yes\\
+16&16&0.105741&yes\\
+32&32&0.096095&yes\\
+64&64&0.091273&yes\\
+128&128&0.088861&yes\\\bottomrule
+\end{tabular}
+\end{table}
+The entire prior survives every partition, because the compounding factor $1+h\Lambda$ and the global second-derivative remainder dominate the observational radius. The result is evidence that this enclosure is too coarse, and not evidence of intrinsic non-identifiability, since the sampled screening above discriminates sharply. It separates mathematical inclusion from useful identification and from machine certification, and it motivates correlation-preserving propagation, the subject of Chapters~\ref{ch:interval} and~\ref{ch:frames}.
+\part{Validated Enclosures}
+
+\chapter{Interval Propagation and Parameter-Affine Taylor Models}\label{ch:interval}
+
+The analytic certificates of Part~II are valid for all time but are only as tight as their global constants permit. A complementary route computes an enclosure of the reachable set of the augmented state $(z,J)$ directly, by validated numerical integration, and reads cumulative expenditure from the $J$ component. The guarantee is then conditional on the arithmetic and on the correctness of the enclosure scheme, and it holds for finite horizons only, but the bounds can be tight over those horizons. This chapter develops the interval and Taylor schemes in order of increasing dependency preservation, on the three-node path with $k=0.7$, $c_A=0.1$, $\Omega=0.16\operatorname{diag}(-1,0,1)$, $a\in[0.12,0.22]$ fixed along each trajectory, and initial state $z_0=(0.45+0.10\ii,0.21-0.06\ii,0.33+0.04\ii)$, with $\dot J=c_Ak^2\|Lz\|^2$. All statements about computed enclosures below refer to outward-rounded multiprecision interval arithmetic (35 to 40 decimal digits), whose library is relied upon but has not been independently audited, and none constitutes a machine-checked proof.
+
+\section{Global Majorants and a First-Order Validated Step}
+The cubic radial damping keeps $\|z(t)\|\le B=1$ for the three-node system, because at $\|z\|^2=1$ the upper derivative $2a_{\max}\|z\|^2-2\|z\|^4/N$ is negative. On this ball the speed and curvature are bounded by $F=(a_{\max}+\|\Omega\|+B^2+k\lambda_{\max})B=3.48$ and $M=\Lambda F=19.0704$ with $\Lambda=a_{\max}+\|\Omega\|+3B^2+k\lambda_{\max}=5.48$, and $|\ddot J|\le M_J=2c_Ak^2\lambda_{\max}^2BF$.
+\begin{theorem}[First-order interval step with remainder]\label{th:firstorder}
+Let $X_n$ and $I_n$ be interval enclosures of $z(t_n;C)$ and $J(t_n;C)$ for the parameter cell $C$, with one parameter interval used in every evaluation. Then
+\[
+X_{n+1}=X_n+hf(X_n,C)+[-1,1]\tfrac{h^2M}2,\qquad I_{n+1}=I_n+hp(X_n)+[-1,1]\tfrac{h^2M_J}2
+\]
+enclose the true state and cumulative expenditure at $t_{n+1}$ for every $a\in C$, provided all interval operations are outward rounded and the majorants hold along the step. Here $p(z)=c_Ak^2\|Lz\|^2$.
+\end{theorem}
+\begin{proof}
+For fixed $a\in C$, Taylor's theorem gives $z(t+h)=z(t)+hf+r$ with each coordinate of $r$ bounded by $h^2M/2$, and likewise for $J$. Induction closes the argument.
+\end{proof}
+Since $J$ is nondecreasing, an upper bound on $J(H)$ controls actuation at every earlier time, but other signed resource terms require their own prefix treatment. With $h=0.002$ and $8$, $16$, $32$ cells the largest coordinate width is $0.0049$ at $H=0.1$ for $8$ cells and $0.0046$ for $32$, so subdivision helps little, because wrapping and the step remainder dominate.
+
+\section{Picard Tubes and Higher-Order Time Coefficients}
+A tighter step builds a tube $Y$ with $X_n+[0,h]F(Y,C)\subset\operatorname{int}Y$, which by the Picard argument encloses every solution starting in $X_n$ for the fixed parameter, and then evaluates Taylor remainders over $Y$ instead of using global majorants.
+\begin{proposition}[Picard-tube Taylor update]\label{prop:picardtaylor}
+If $X_n$ contains every admissible augmented state, the fixed parameter lies in $C$, interval operations enclose their exact counterparts, and the Picard inclusion holds, then both
+$X_{n+1}^{(1)}=X_n+hP_1(X_n,C)+h^2P_2(Y,C)$ and $X_{n+1}^{(2)}=X_n+hP_1(X_n,C)+h^2P_2(X_n,C)+h^3P_3(Y,C)$ enclose every admissible state at $t_{n+1}$, where $P_j$ are the time-Taylor coefficients computed by truncated polynomial arithmetic.
+\end{proposition}
+With $h=0.005$ and all twelve tested configurations passing the Picard test, first and second order give at $H=0.1$ with $8$ cells widths $0.000623$ and $0.000612$, and at $H=0.2$ widths $0.001362$ and $0.001340$ with $J$ upper endpoints near $0.002026$. The second-order gain is slight, consistent with interval wrapping dominating the time truncation on this short benchmark.
+
+\section{Cell-Centered Sensitivities}
+To reduce parameter overestimation, expand about the midpoint $m$ of each cell with analytic majorants for the second sensitivities, as in Theorem~\ref{th:cellcentered}, augmented by expenditure sensitivities $K=\partial_aJ$ and $W=\partial_a^2J$ obeying $\dot K=2c_Ak^2\re\langle Lz,LS\rangle$ and $\dot W=2c_Ak^2(\|LS\|^2+\re\langle Lz,LT\rangle)$. With $U(t)=B(e^{\Lambda t}-1)/\Lambda$, $V(t)=\tfrac{e^{\Lambda t}-1}{\Lambda}(6BU^2+2U)$ and $W_\star(t)=2c_Ak^2\|L\|^2t(U^2+BV)$, one has $\|S\|\le U$, $\|T\|\le V$ and $|W|\le W_\star$.
+\begin{theorem}[Centered enclosure for state and expenditure]\label{th:centered}
+If outward-rounded intervals $Z_m,S_m,I_m,K_m$ enclose the state, its first sensitivity, the expenditure and its first sensitivity at the midpoint, then for every $a\in[m-\varrho,m+\varrho]$,
+\[
+z(t,a)\in Z_m+[-\varrho,\varrho]S_m+[-R_z,R_z]^6,\qquad J(t,a)\in I_m+[-\varrho,\varrho]K_m+[-R_J,R_J],
+\]
+with $R_z=V\varrho^2/2$ and $R_J=W_\star\varrho^2/2$.
+\end{theorem}
+\begin{table}[ht]\centering\small
+\caption{Direct against centered enclosures, three-node path. Widths are maxima over the six coordinates and all cells.}
+\begin{tabular}{rrrrrr}\toprule
+Cells&$H$&Direct width&Centered width&Direct $J^+$&Centered $J^+$\\\midrule
+8&0.10&0.00492123&0.00486705&0.00156433&0.00156393\\
+8&0.20&0.01143580&0.01128266&0.00277231&0.00277134\\
+32&0.10&0.00455461&0.00454730&0.00156321&0.00156309\\
+32&0.20&0.01078766&0.01074527&0.00276744&0.00276676\\\bottomrule
+\end{tabular}
+\end{table}
+Three high-accuracy numerical trajectories (the two parameter endpoints and the midpoint) fall inside the computed enclosures for every cell, which supplements and does not replace the analytic inclusion proof. The gain is under $2\%$, because the nominal interval trajectories of $Z_m$ and $S_m$ still wrap and that wrapping is shared by both schemes.
+
+\section{Parameter-Affine Taylor Models}
+The sensitivity expansion can be pushed one order further and the second coefficient propagated over the whole cell, writing $X(t,a)=X_0(t)+uX_1(t)+u^2R(t,u)$ with $u=a-m$.
+\begin{proposition}[Cell-centered affine enclosure]\label{prop:affinecell}
+If $\mathcal X_0,\mathcal X_1$ enclose $X(t,m)$ and $\partial_aX(t,m)$ and $\mathcal X_2$ encloses $\tfrac12\partial_a^2X(t,a)$ for every $a\in C$, then $X(t,a)\in\mathcal X_0+[-\varrho,\varrho]\mathcal X_1+[0,\varrho^2]\mathcal X_2$ for every $a\in C$, and its seventh coordinate encloses cumulative expenditure.
+\end{proposition}
+\begin{proof}
+Taylor's theorem in the scalar parameter with Lagrange remainder applies coordinatewise to the smooth solution map, and the intermediate parameter lies in $C$.
+\end{proof}
+Time propagation uses a Picard tube and the second-order step $X_{n+1}\subset X_n+hF(X_n,C)+\tfrac{h^2}2DF(\mathcal B)F(\mathcal B)$ with $\mathcal B$ the tube, computed by polynomial automatic differentiation in the parameter. Strict inclusion is tested with interval-native comparisons, and steps are built from decimal strings, so that no binary floating-point conversion enters the verification. The conversion to floating point remains only for reporting.
+\begin{table}[ht]\centering\small
+\caption{Strict parameter-affine enclosure against direct interval integration.}
+\begin{tabular}{rrrrrr}\toprule
+Cells&$H$&Direct width&Affine width&Reduction&Affine $J^+$\\\midrule
+4&0.05&0.00059168&0.00055627&5.98\%&0.00067422\\
+4&0.10&0.00123378&0.00108684&11.91\%&0.00122036\\
+4&0.20&0.00269847&0.00208698&22.66\%&0.00202078\\
+8&0.05&0.00029854&0.00028236&5.42\%&0.00067421\\
+8&0.10&0.00062259&0.00055227&11.30\%&0.00122034\\
+8&0.20&0.00136216&0.00106309&21.96\%&0.00202076\\\bottomrule
+\end{tabular}
+\end{table}
+The reduction grows with horizon, to about $22\%$ at $H=0.2$, while the expenditure upper bounds are almost unchanged, a first sign of a theme developed in Chapter~\ref{ch:frames}: width reduction in state coordinates need not tighten a bound on an accumulated observable.
+
+\section{What Remains Unsolved at This Level}
+All the schemes of this chapter retain interval wrapping in the sensitivity dynamics, so none controls long-horizon growth. None uses observations to reject parameter cells with machine-certified enclosures. None establishes the energy floor at every intermediate time beyond the monotonicity argument for $J$. The next chapter replaces coordinatewise hulls of the nominal and sensitivity trajectories by representations that transport correlations explicitly.
+\chapter{Wrapping, Correlated Generators and Moving Frames}\label{ch:frames}
+
+Coordinatewise interval hulls discard the correlations between state variables created by the flow, so the enclosure of a stable system can grow even when the true reachable set does not. This chapter isolates that effect on an exactly solvable benchmark, then develops correlated-generator enclosures for the nonlinear reduced oscillator pair of Chapter~\ref{ch:reduced}, validates them in continuous time by Picard tubes and outward dyadic rounding, and compares fixed and moving frames. The comparisons are deliberately controlled, with identical initial sets, step sizes and rounding, and they include several outcomes that run against expectation.
+
+\section{An Exact Benchmark for Wrapping}
+Let $p\in[9/10,11/10]$, $v_0=(p,0)^\top$ and $v_{n+1}=Rv_n$ with the rotation-scaling $R=\tfrac15\begin{psmallmatrix}3&-4\\4&3\end{psmallmatrix}$, which satisfies $R^\top R=I$. The affine representation $v_n=R^n(1,0)^\top p$ retains the same $p$ at every step, whereas a coordinatewise box computes $X_{n+1}=\operatorname{hull}(RX_n)$.
+\begin{proposition}[Exponential wrapping]\label{prop:wrapping}
+The sum of widths of the box after $n\ge1$ steps is $W_n^{\rm box}=\tfrac7{25}(\tfrac75)^{n-1}=\tfrac15(\tfrac75)^n$, whereas the affine representation has width $W_n^{\rm aff}=\tfrac15(|(R^n)_{11}|+|(R^n)_{21}|)\le\tfrac{\sqrt2}5$. For the expenditure surrogate $J_n=\sum_{j<n}\|v_j\|^2$ orthogonality gives $J_n=np^2\in[\tfrac{81n}{100},\tfrac{121n}{100}]$ exactly.
+\end{proposition}
+\begin{proof}
+After the first rotation the coordinate radii are $(3/50,4/50)$, and under independent interval evaluation their sum is multiplied by $7/5$ at every later step. The affine widths are $\tfrac15$ times the absolute entries of the first column of $R^n$, and Cauchy--Schwarz with orthogonality gives the bound.
+\end{proof}
+\begin{table}[ht]\centering\small
+\caption{Exact rational benchmark: box against affine width.}
+\begin{tabular}{rrrr}\toprule
+Steps&Box width&Affine width&Ratio\\\midrule
+4&0.768320&0.276160&2.78\\
+8&2.951578&0.265716&11.11\\
+12&11.338782&0.224578&50.49\\
+16&43.559067&0.281801&154.57\\
+20&167.336511&0.250652&667.61\\
+24&642.839940&0.245251&2621.15\\\bottomrule
+\end{tabular}
+\end{table}
+The benchmark is a discrete linear surrogate, so it proves that retaining a common uncertain variable can prevent catastrophic wrapping in a stable map but does not quantify the improvement for the nonlinear oscillator, where parameter--state interactions create genuine remainders. A related tangent model makes the same point for the oscillator itself: freezing the Jacobian at a reference point of the three-oscillator system and transporting a shared affine frame $A_n=M^nA_0$ gives the exact image of the initial set, with coordinate half-widths $\sum_j|(A_n)_{ij}|\le b_n$ componentwise, where $b_n$ is the repeated-hull recursion $b_{n+1}=|M|b_n$. The width ratio of repeated boxes to the affine frame grows from $2.41$ at $t=0.5$ to $5.57$ at $t=4$. This too is a linear surrogate, not a certification of the nonlinear flow.
+
+\section{Nonlinear Discrete Maps with Correlated Generators}
+For the reduced real pair in physical coordinates, a nonlinear Euler map with persistent growth $a=0.17+0.02\xi$, $\xi\in[-1,1]$, can be enclosed by $y=c+A\xi+e$ with the center following the midpoint map, $A$ following the exact first derivative of the map at the center including its explicit parameter derivative, and the remainder bounded in exact rationals by $d\,U_i+3|c_i|U_i^2+U_i^3$ for the state and $2c_Ak^2(U_1+U_2)^2$ for expenditure, where $U_i=|A_i|+r_i$ and $d=0.02$. With $h=0.025$, eight steps give at $t=0.2$ an affine state-width sum $0.00518828$ against $0.00630983$ for direct interval evaluation of the same map, a $17.8\%$ reduction, while the expenditure upper bounds are $0.00087020$ and $0.00087735$. In collective--disagreement coordinates, three independent generators encoding the initial $p$, initial $m$ and the persistent parameter, with the Jacobian at the center transporting $G$ and a mean-value bound controlling the Jacobian variation, give at $t=0.4$ a $37.7\%$ narrower state enclosure than interval evaluation ($0.009272$ against $0.014893$). These are inclusion theorems for the discrete polynomial map in exact rational arithmetic, and they certify neither the continuous flow nor expenditure beyond the discrete accumulator.
+
+\section{Continuous-Time Validation by Picard Tubes}
+To bound the continuous flow, each step first constructs a tube $\mathcal T$ with $X+hf(\mathcal T,A)\subset\operatorname{int}\mathcal T$, so every solution from $X$ stays in $\mathcal T$ for the fixed parameter. Because the system is autonomous and the parameter constant, $x''=D_xf(x,a)f(x,a)$, and the flow endpoint lies in $X+hf(X,[a])+[-\mathcal D,\mathcal D]$ with $\mathcal D_i=\tfrac{h^2}2\sum_j\sup_{\mathcal T}|(D_xf)_{ij}f_j|$. The same defect is added to the correlated affine propagator. All endpoints are exact rational fractions rounded outward to a dyadic grid, here $40$ fractional bits, with inclusion comparisons carried out in exact arithmetic.
+\begin{proposition}[Continuous-time inclusion]\label{prop:ctinclusion}
+If $X_n$ encloses the exact states for every admissible parameter and the Picard inclusion holds, then the exact trajectory over $[t_n,t_n+h]$ lies in $\mathcal T_n$ and its endpoint lies in $X_{n+1}$; if the lower energy endpoint of every tube is at least $E_*$, the floor holds at every time through the final step.
+\end{proposition}
+For the reduced pair with $a\in[0.15,0.19]$ fixed on each trajectory, $p(0)\in[0.329,0.331]$, $m(0)\in[0.119,0.121]$ and $h=0.01$, the correlated-generator enclosure represents $x=c+\sum_\ell g_\ell\xi_\ell+[-r,r]$ with three generators, the third encoding $a=0.17+0.02\xi_3$.
+\begin{table}[ht]\centering\small
+\caption{Continuous-time validated enclosures, interval against correlated generators.}
+\begin{tabular}{rrrr}\toprule
+$H$&Interval width&Affine width&Affine $J$ upper\\\midrule
+0.1&0.006825&0.005899&0.00051106\\
+0.2&0.009859&0.007678&0.00088686\\
+0.4&0.016705&0.011075&0.00136804\\
+0.6&0.024889&0.014504&0.00163178\\
+0.8&0.034876&0.018200&0.00177920\\\bottomrule
+\end{tabular}
+\end{table}
+A longer run, $H$ up to $2$, with the same fixed-generator representation shows the effect compounding: the reduction in state width relative to direct intervals grows from $22.1\%$ at $H=0.2$ to $47.8\%$ at $0.8$ and $67.2\%$ at $2.0$ (widths $0.193859$ against $0.063604$), while the $J$ upper bound increases slowly from $0.00088686$ to $0.00208117$. The affine $J$ bound at $H=2$ is a validated statement for $t\in[0,2]$, in contrast to the analytic ceiling $0.00187$ of Chapter~\ref{ch:reduced}, which holds for all time.
+
+\section{Resource-Floor Certification from Monotone Expenditure}
+The passage from an enclosure of $J$ to a statement about $E$ rests on one lemma, used repeatedly in the tables above and below.
+\begin{lemma}[Prefix certification]\label{lem:prefix}
+Let $E(t)=E(0)+(q-b)t-J(t)$ with $J$ nondecreasing, $J(0)=0$, and $J(H)\le J^+$. If $q\ge b$ then $E(t)\ge E(0)-J^+$ for every $t\in[0,H]$. If $q<b$ then $E(t)\ge E(0)-(b-q)H-J^+$ for every $t\in[0,H]$. In particular the endpoint lower bound $E(H)\ge E(0)+(q-b)H-J^+$ is a different statement and must not be reported as uniform in time.
+\end{lemma}
+\begin{proof}
+Monotonicity gives $J(t)\le J(H)\le J^+$, and $(q-b)t\ge\min\{0,(q-b)H\}$ for $t\in[0,H]$.
+\end{proof}
+With $E(0)=0.1$, $q=0.01$, $b=0.005$ and floor $0.08$, the correlated enclosure gives $E(t)\ge0.0979188294$ for all $t\in[0,2]$ and $E(2)\ge0.1079188294$, both above the floor. The conservative variant that discards positive supply uses $E(0)-bH-J^+$.
+
+\section{Dyadic Compression and Fixed Parameter Intervals}
+Exact rational endpoints grow in denominator under repeated polynomial operations, so outward rounding to a bounded dyadic grid keeps the computation finite. For the reduced real pair with fixed uncertain $a\in[0.15,0.19]$, a rational interval step with outward dyadic rounding at $p=24$, $40$ and $64$ bits gives at $H=0.4$ state-width sums $0.02356875$, $0.02356170$, $0.02356170$, upper expenditure estimates $0.00141549$, $0.00141426$, $0.00141426$, and energy lower bounds $0.10058439$, $0.10058574$, $0.10058574$, so denominator control does not dominate enclosure error beyond $40$ bits. This is a rigorous continuous-time inclusion for the reduced real subsystem, conditional on the Picard test, and it does not avoid interval wrapping, because the state widths continue to grow.
+
+Combining dyadic compression with the parameter-affine decomposition $y=c+s\xi+e$ ($a=0.17+0.02\xi$, $h=0.025$) adds the rounding errors of center and sensitivity to the remainder before its upper endpoint is rounded outward.
+\begin{table}[ht]\centering\small
+\caption{Dyadic compression with a parameter-affine decomposition (40 bits).}
+\begin{tabular}{rrrrr}\toprule
+$H$&Direct width&Affine width&Reduction&Affine $J$ upper\\\midrule
+0.1&0.004641&0.004389&5.4\%&0.00052934\\
+0.2&0.010038&0.008804&12.3\%&0.00091958\\
+0.3&0.016387&0.013316&18.7\%&0.00120858\\
+0.4&0.023918&0.017988&24.8\%&0.00142392\\\bottomrule
+\end{tabular}
+\end{table}
+At $H=0.4$ the conservative all-prefix bound $E(0)-bH-J^+$ is $0.09657608$, above $0.08$, and the endpoint-only bound crediting supply is $0.10057608$.
+
+\section{Parameter-Cell Reconditioning}
+Subdividing the growth parameter into one, two or four cells gives each cell its own nominal trajectory, first sensitivity and remainder. This is parameter-cell reconditioning and not a moving-frame state algorithm.
+\begin{table}[ht]\centering\small
+\caption{Cell subdivision at $H=0.4$. The reported width is the maximum per-cell width and not the width of the union.}
+\begin{tabular}{rrrr}\toprule
+Cells&Max cell width&Max $J$ upper&Min energy lower\\\midrule
+1&0.017988&0.00142392&0.096576\\
+2&0.012651&0.00142003&0.096580\\
+4&0.010006&0.00141817&0.096582\\\bottomrule
+\end{tabular}
+\end{table}
+Four cells reduce the maximum per-cell width by $44.4\%$ while the global $J$ upper bound, the maximum over cells, decreases by only $0.4\%$. A valid global expenditure bound is the maximum of the cell bounds, so width reductions per cell must not be reported as reductions of the union.
+
+\section{Equivalence of Coordinate Representations}
+An apparent improvement from collective--disagreement coordinates $(p,m)$ appears when the enclosure is compared with a physical-coordinate representation that preserves exactly the same initial parallelogram. The direct baseline starts from the coordinate hull of that set and thereby loses the initial correlation.
+\begin{proposition}[Representation equivalence]\label{prop:equiv}
+Let $Y$ be a validated enclosure in $(p,m,J)$ coordinates and $\mathcal C(Y)=\{(p+m,p-m,J)\}$. If a physical affine propagator evaluates the conjugated vector field with the same interval operations and rounding decisions, its output at every checkpoint equals $\mathcal C(Y)$.
+\end{proposition}
+\begin{proof}
+$\mathcal C$ is an invertible linear map conjugating the physical field to the modal one, so transporting the shared generators through either field and applying $\mathcal C$ at output gives the same set. The statement concerns the specified computational constructions and not every interval algorithm in the two coordinate systems.
+\end{proof}
+\begin{table}[ht]\centering\small
+\caption{Direct hull against the correlated representation (identical initial uncertainty set, $h=0.01$).}
+\begin{tabular}{rrrrr}\toprule
+$H$&Direct width&Correlated width&Direct $J$ upper&Correlated $J$ upper\\\midrule
+0.1&0.015778&0.015767&0.000551&0.000537\\
+0.2&0.024832&0.024019&0.000974&0.000940\\
+0.4&0.048213&0.042502&0.001573&0.001477\\
+0.6&0.081786&0.064646&0.001995&0.001804\\
+0.8&0.130889&0.091977&0.002362&0.002023\\\bottomrule
+\end{tabular}
+\end{table}
+At $H=0.8$ the correlated width is $29.73\%$ below the direct hull. The improvement therefore measures the cost of losing correlation relative to independent physical-coordinate boxes, and it is not a property intrinsic to the collective--disagreement coordinates.
+
+\section{Negative and Mixed Results on Moving Frames}
+Three attempts to improve on the fixed correlated representation by changing the frame give results that bear directly on which claims are warranted.
+
+\paragraph{A Jacobian-guided shear.} The moving frame uses $v=p-sm$ with $s$ updated after each step by a midpoint-Jacobian heuristic, and between steps $v_{\rm new}=v_{\rm old}+(s_{\rm old}-s_{\rm new})m$. The physical-coordinate enclosure becomes \emph{wider}: $0.120353$ against $0.091977$ at $H=0.8$, a $30.8\%$ increase, with the $J$ bounds nearly equal ($0.0020247$ against $0.0020227$). The interval hull taken at each basis change can overwhelm any reduction in local linear coupling, so a dynamically changing basis is not intrinsically wrapping resistant, and no general theorem that fixed frames dominate moving frames follows.
+
+\paragraph{A rescaling aligned with linear decay.} Writing $m=s_nv$ with $s_{n+1}=(1-2kh)s_n$ is an invertible rescaling that follows the linear disagreement decay. The improvement is negligible ($0.091905$ against $0.091977$ at $H=0.8$, and $0.0020222$ against $0.0020227$ for $J$), because the coordinatewise enclosure of the nonlinear remainder terms is unchanged.
+
+\paragraph{Matrix transport of the remainder.} A genuine matrix-valued frame $B_{n+1}=(I+hDf(c_n,a_0))B_n$ with the interval remainder carried in the transported coordinates through the exact rational inverse is a first-order validated moving-frame enclosure.
+\begin{table}[ht]\centering\small
+\caption{Matrix transport against the fixed correlated representation.}
+\begin{tabular}{rrrrrr}\toprule
+$H$&Direct width&Fixed width&Moving width&Fixed $J$ upper&Moving $J$ upper\\\midrule
+0.2&0.009859&0.007678&0.007501&0.000887&0.000893\\
+0.4&0.016705&0.011075&0.010357&0.001368&0.001386\\
+0.8&0.034876&0.018200&0.015194&0.001779&0.001833\\
+1.2&0.062950&0.027313&0.019648&0.001918&0.002019\\
+1.6&0.109760&0.040877&0.024067&0.001990&0.002154\\
+2.0&0.193859&0.063604&0.028549&0.002081&0.002313\\\bottomrule
+\end{tabular}
+\end{table}
+At $H=2$ matrix transport reduces the state width by $55.1\%$ ($0.0636$ to $0.0285$) but \emph{raises} the expenditure upper bound from $0.00208117$ to $0.00231344$. The outcome is mixed: state-space wrapping improves, while the accumulated nonlinear observable $J$ is sensitive to the residual forcing mapped through $|B^{-1}|$.
+
+\paragraph{Observable-aware combination.} One might hope to take the best of both. A third certificate intersects the disagreement projections of the fixed and moving Picard tubes on each step and accumulates $U_{n+1}=\lceil U_n+hC\sup\{m^2:m\in M_n\}\rceil$, so each of the three enclosures independently bounds $J$ and the minimum is valid.
+\begin{table}[ht]\centering\small
+\caption{Expenditure bounds from three independent enclosures and the validated minimum.}
+\begin{tabular}{rrrr}\toprule
+$H$&Fixed $J$ upper&Moving $J$ upper&Quadrature $J$ upper\\\midrule
+0.2&0.0008869&0.0008927&0.0010418\\
+0.4&0.0013680&0.0013864&0.0016390\\
+0.8&0.0017792&0.0018328&0.0021963\\
+1.2&0.0019185&0.0020192&0.0024060\\
+1.6&0.0019904&0.0021536&0.0024976\\
+2.0&0.0020812&0.0023134&0.0025458\\\bottomrule
+\end{tabular}
+\end{table}
+The independently accumulated tube bound is weaker than both, so taking the minimum recovers $0.00208117$ with no new improvement. Narrower state intervals do not automatically tighten a bound on a path-dependent quadratic observable, because interval quadrature discards temporal dependence and intersecting projected tubes does not recover the correlation between $m(t)$ and the accumulated $J$. A stronger scheme would transport a joint correlated representation of $(p,m,J)$, possibly with generators for integrated quadratic terms. All of these results concern the reduced real system, and the matrix-transport frame is a first-order construction, not a QR-based Lohner integrator.
+\part{Synthesis}
+
+\chapter{What the Programme Establishes and What Remains Open}\label{ch:synthesis}
+
+The preceding chapters pursued one question, namely when dynamical coordination preserves the capacity for continued operation, through three families of guarantees: analytic bounds valid for all time under stated constants, validated enclosures valid on finite horizons under stated arithmetic, and numerical experiments that calibrate the former against trajectories. This chapter states how those families relate, separates what is established from what is merely suggested, and lists the problems that the programme leaves open.
+
+\section{A Taxonomy of Guarantees}
+The scope of a guarantee matters as much as its numerical value, since a tighter bound with narrower scope is not a better result of the same kind. Table~\ref{tab:taxonomy} records for each family the object bounded, the horizon, the assumptions it leans on, and the kind of evidence offered.
+\begin{table}[ht]\centering\small
+\caption{Guarantee types used in this monograph.}\label{tab:taxonomy}
+\begin{tabular}{@{}p{3.2cm}p{2.6cm}p{2.2cm}p{4.4cm}@{}}\toprule
+Family&Object bounded&Horizon&Principal assumption\\\midrule
+Edge-dissipative and direct spectral certificates (Chapters~\ref{ch:transverse}--\ref{ch:network})&Cumulative expenditure $J$&All time&Constants $\lambda_2$, $k$, global amplitude bound, forcing size\\
+Signed work and checkpoint envelopes (Chapter~\ref{ch:signed})&$J$ and its prospective growth&Finite, restartable&Lipschitz constants on the enclosure\\
+Young allocation (Chapter~\ref{ch:young})&Same as direct certificate&All time&Choice of $\theta$, which only redistributes slack\\
+Reduced-system dissipation (Chapter~\ref{ch:reduced})&$J$ for two oscillators&All time&Invariant strip, parameter interval\\
+Interval and affine enclosures (Chapters~\ref{ch:interval}--\ref{ch:frames})&State and $J$&Finite, fixed horizon&Outward rounding, Picard inclusion\\
+Set-valued inference (Chapter~\ref{ch:params})&Feasible parameters&Observation window&Persistent parameter, noise budget\\
+Calibration (Chapter~\ref{ch:young})&Ratio of bound to trajectory&Sampled&Numerical integration accuracy\\\bottomrule
+\end{tabular}
+\end{table}
+Only the first four rows are theorems whose conclusion holds for the continuous system without reference to a computation. The enclosure rows are theorems about inclusion, but their application to a specific number depends on an implementation of interval arithmetic that is trusted and not machine-verified. The calibration row is an experiment, and its content is a set of measured ratios on a stated sample of graphs, frequency scales, initial states and horizons.
+
+\section{Established Results}
+The resource floors below hold for a constant positive net supply, a fixed coupling gain and the stated actuator law. They do not certify viability for a finite reservoir or for a coupling gain that depends on the resource.
+Within the stated model, the programme establishes the following. A resource floor $E_*$ is preserved on a horizon whenever cumulative actuator expenditure stays below the initial surplus plus net supply, and the edge-dissipative structure of the cubic nonlinearity yields an expenditure bound that does not grow with network size through the nonlinearity itself. The direct spectral certificate gives a transient term proportional to initial edge energy divided by $\beta=k-(a_++\delta)/\lambda_2$ and a persistent term that grows linearly in time with a rate set by the frequency work $F$. The Young parameter allocates the same dissipation budget between the two terms, the closed forms of Chapter~\ref{ch:young} are exact, and the achievable gain on the transient is a factor of at most two. The reduced pair admits a joint dissipation functional that reduces certification to a scalar Riccati comparison. Persistence of parameters through set-valued recursion is sound, and correlated generators prevent the exponential wrapping that coordinatewise hulls suffer on a stable linear map.
+
+\section{Mixed and Negative Results}
+Several outcomes were not what the preceding analysis suggested, and they bound the claims that may responsibly be made.
+\paragraph{Calibration.} The optimized direct certificate lies within roughly $1.1$ to $1.7$ times the true expenditure on cycle and complete graphs, and a median of about $2.3$ to $3.2$ times on the path graph. The remaining slack lies in the persistent term, which uses the global amplitude bound and the full frequency-gradient norm. The Young parameter cannot recover that slack because it acts on the transient only.
+\paragraph{State-only inference.} Finite-difference velocities derived from state checkpoints fail to contract any prior interval at the tested noise levels, while direct velocity observations and sampled joint screening succeed.
+\paragraph{Global Lipschitz cells.} Euler enclosures with global constants retain every parameter cell at every tested subdivision, so a valid inclusion is not necessarily informative.
+\paragraph{Moving frames.} Matrix transport narrows the state enclosure by $55.1\%$ at $H=2$ yet raises the expenditure bound from $0.00208117$ to $0.00231344$, and an observable-aware minimum of three valid bounds recovers the smaller value without improving it.
+\paragraph{Coordinate choice.} The apparent advantage of collective--disagreement coordinates over physical coordinates disappears when the physical-coordinate baseline keeps the same initial correlation (Proposition~\ref{prop:equiv}).
+These results share a pattern: narrowing an enclosure in state space does not by itself narrow a bound on a path-dependent accumulated quantity, and a bound that is valid for every parameter in a set may be uninformative about which parameter is true.
+
+\section{Open Problems}
+\paragraph{Mode-resolved forcing.} Theorem~\ref{th:moderes} allocates dissipation mode by mode and reduces the bound by up to $62\%$ for forcing concentrated in higher modes, but by under $3\%$ for the reference pattern. What remains open is the shared cross-mode term $\delta/\underline\lambda_2$, which is not resolved by mode, and a modal replacement for the global amplitude bound $R$, which would have to control cross-mode coupling through the cubic term.
+
+\paragraph{State-dependent amplitude bound.} Proposition~\ref{prop:envelope} replaces the constant $R$ by a closed-form time-dependent envelope, which removes most of the amplitude conservatism for small initial states and little of it near the limit-cycle amplitude. A bound that also uses restart information, such as the observed maximum modulus at a checkpoint, and a bound on the mean $m$ that is sharper than the maximum modulus, remain open. The latter matters most for the four-node reference examples, where the initial amplitude is close to $\sqrt a$.
+
+\paragraph{Time-varying supply and actuator control.} Throughout, $q$, $b$ and $k$ are constants. If the coupling gain depends on the resource, $k=k(E)$, then expenditure and synchronization interact, and Lemma~\ref{lem:prefix} no longer applies as stated because $J$ ceases to be a prescribed monotone functional of the trajectory alone. A viability analysis with feedback from $E$ to $k$ would address the central question directly, since it asks when coordination can be sustained while it consumes the resource it relies upon.
+
+\paragraph{Mixed-state and stochastic extension.} Intermittent or random supply, and noise in the frequency pattern, would require replacing deterministic floors by probabilistic ones. A natural route uses the dissipation inequality of Chapter~\ref{ch:network} as a supermartingale drift condition, but no such calculation has been carried out.
+
+\paragraph{Machine-checked enclosures.} All validated enclosures reported here rely on a rational or multiprecision interval library whose correctness is assumed. Re-running the Picard-tube step in a verified environment, or in exact rational arithmetic throughout, would convert the finite-horizon tables into machine-checked statements.
+
+\section{An Extension to Intermittent Forcing}
+The same formalism extends naturally to environmental forcing that switches on and off, as in field studies of plants whose resource supply follows an irregular photoperiod or precipitation cycle. If the supply is $q(t)\in\{q_{\rm on},q_{\rm off}\}$ with dwell times bounded below, the prefix certificate of Lemma~\ref{lem:prefix} applies segment by segment, and the question becomes whether the expenditure accumulated during an off interval can be recovered during the next on interval before the floor is reached. Whether a periodic schedule keeps the surplus above the floor depends on the ratio of mean supply to mean expenditure rate, and on the burst expenditure that follows each switch, because transients restart the edge energy term. This direction is proposed and not developed, and it is the main reason the checkpoint construction was designed to allow restarts.
+
+\section{Closing Remarks}
+The central finding is modest and exact. A coordination mechanism can be priced in advance by a bound that depends only on graph spectrum, coupling strength and the size of the frequency pattern, and that price can be made reasonably tight on well-connected graphs. The remaining conservatism is concentrated in the persistent forcing term, so progress on the question posed at the start depends on resolving that term mode by mode, and on allowing supply and coupling to depend on the resource state.
+\appendix
+
+\chapter{Notation}\label{app:notation}
+Graphs are undirected and connected with $N$ nodes, Laplacian $L$ with eigenvalues $0=\lambda_1<\lambda_2\le\dots\le\lambda_N=\lmax$, and projector $P=I-\tfrac1N\one\one^\top$ onto the disagreement subspace. The oscillator state is $z\in\C^N$ with transverse part $w=Pz$. The parameters $a$, $k$ and $\Omega=\operatorname{diag}(\omega_i)$ denote growth rate, coupling strength and natural frequencies, with $\tilde\omega=P\omega$. The resource is $E$ with floor $E_*$, supply $q$ and basal drain $b$, and the cumulative actuator expenditure is $J(t)=\int_0^t\cA k^2\|Lz\|^2\,ds$. Edge energy is $Q=z^*Lz$ and $W=Q/2$. The disagreement rate is $\beta=k-(a_++\delta)/\lambda_2$, the amplitude bound is $R$, and the frequency work is $F=R\|\tilde\omega\|$. The Young parameter is $\theta\in(0,1)$, and the transient and persistent coefficients are $\alpha=\cA k^2W(0)/\beta$ and $\rho=\cA k^2F^2/\beta^2$. For the two-oscillator reduction, $p$ and $m$ denote collective and disagreement coordinates. Intervals are written in capitals, $\overline B(c,r)$ is the closed ball, and outward rounding is understood wherever an enclosure is called validated.
+
+\chapter{Computational Materials}\label{app:materials}
+Every table in this monograph was produced by a short Python program, and each program writes its results to a comma-separated file. Table~\ref{tab:materials} lists the principal programs behind each chapter. Programs whose names begin with \texttt{make} only format results as tables and are omitted.
+\begin{table}[ht]\centering\small
+\caption{Computational materials by chapter.}\label{tab:materials}
+\begin{tabular}{@{}p{2.2cm}p{9.6cm}@{}}\toprule
+Chapter&Principal scripts\\\midrule
+\ref{ch:model}, \ref{ch:expenditure}&synchronization\_experiments, stuart\_landau\_actuation\_experiment, actuation\_derived\_viability\_experiment, coupling\_viability\_experiment\\
+\ref{ch:transverse}, \ref{ch:spectral}&spectral\_actuation\_experiment, nonlinear\_certificate\_comparison, edge\_dissipation\_comparison, time\_dependent\_dissipation\\
+\ref{ch:network}&network\_dissipation\_certificate, heterogeneous\_edge\_experiment, heterogeneous\_network\_certificate, direct\_spectral\_expenditure, graph\_aware\_frequency, frequency\_correlation\_experiment\\
+\ref{ch:signed}&local\_frequency\_work, predictive\_frequency\_work, perturbed\_checkpoint\_experiment, uncertain\_checkpoint\_experiment\\
+\ref{ch:young}&young\_parameter\_optimization, certificate\_calibration, mode\_resolved\_certificate, amplitude\_envelope\_certificate\\
+\ref{ch:reduced}&joint\_dissipation\_certificate, piecewise\_riccati\\
+\ref{ch:params}&parameter\_set\_extension, joint\_state\_parameter\_extension, taylor\_parameter\_extension, local\_taylor\_cells, continuous\_cell\_propagation\\
+\ref{ch:interval}&validated\_joint\_propagation, nonlinear\_taylor\_validated, validated\_centered\_taylor, affine\_nonlinear\_parameter, strict\_affine\_validation\\
+\ref{ch:frames}&affine\_wrapping\_experiment, moving\_frame\_benchmark, nonlinear\_moving\_affine, lohner\_generator\_experiment, continuous\_affine\_validated, continuous\_lohner\_validated, dyadic\_viability, dyadic\_affine\_combined, long\_horizon\_affine\_validation, adaptive\_affine\_reconditioning, modal\_frame\_validated, fair\_affine\_comparison, matrix\_frame\_test, moving\_frame\_reconditioning, adaptive\_lohner\_frame, observable\_aware\_dual\_enclosure\\\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Conventions.} Enclosure computations use exact rational arithmetic or multiprecision interval arithmetic as stated in the relevant chapter, and reference trajectories use floating-point integration and are marked numerical wherever reported. The calibration and allocation studies of Chapter~\ref{ch:young} are described here in more detail. The program \texttt{young\_parameter\_optimization.py} evaluates the Young-parameterized certificate in exact rational arithmetic, rounds square roots upward at $2^{-80}$, and writes the supply-matched and finite-horizon optima. The program \texttt{certificate\_calibration.py} integrates the complex four-node system on path, cycle and complete graphs at two frequency scales and nine initial states with an eighth-order Dormand--Prince method at relative tolerance $10^{-11}$, evaluates three certificates at $T\in\{1,5,20,100\}$, and writes $216$ rows in each of which every bound is at least the integrated expenditure. The program \texttt{mode\_resolved\_certificate.py} evaluates Theorem~\ref{th:moderes} against the global Young bound ($144$ rows), and \texttt{amplitude\_envelope\_certificate.py} evaluates Proposition~\ref{prop:envelope} with and without the modal allocation ($120$ rows) and imports helper functions from the modal program, so the two must share a directory.
+
+\paragraph{Evidence kind by table.} The guarantee behind a number depends on how it was computed, and Table~\ref{tab:evidence} separates the four kinds used here. Agreement between a bound and an integrated trajectory is a consistency check and not an enclosure proof, and no independent machine verification of the interval-arithmetic implementations was performed.
+\begin{table}[ht]\centering\small
+\caption{Evidence kind and arithmetic backend by chapter.}\label{tab:evidence}
+\begin{tabular}{@{}p{1.6cm}p{4.0cm}p{6.4cm}@{}}\toprule
+Chapters&Evidence kind&Backend and check\\\midrule
+\ref{ch:model}--\ref{ch:signed}&Theorems with numerical illustration&Closed-form bounds evaluated in double precision, compared with integrated trajectories (consistency only)\\
+\ref{ch:young}&Theorems, exact optima, calibration&Exact rationals with upward-rounded square roots at $2^{-80}$ for the optima; DOP853 integration at relative tolerance $10^{-11}$ for calibration (consistency only)\\
+\ref{ch:reduced}&Theorems with exact-rational evaluation&Rational arithmetic for the tabulated Riccati values\\
+\ref{ch:params}&Set-membership soundness theorems; sampled screening&Floating-point integration of nominal flows, so retained-cell counts are demonstrations and not certified exclusions\\
+\ref{ch:interval}&Validated enclosures&Outward-rounded multiprecision interval arithmetic, trusted but not machine-verified; Picard inclusion tested in every step\\
+\ref{ch:frames}&Validated enclosures&Exact rationals with outward dyadic rounding at 40 bits unless stated; Picard inclusion tested in every step\\\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Reproduction.} The command \texttt{python3 reproduce.py} in the experiments directory re-runs the four programs of Chapter~\ref{ch:young} in a scratch directory, compares every regenerated table with the reference tables to a relative tolerance of $10^{-9}$, and checks the headline figures quoted in the text. Library versions are pinned in \texttt{requirements.txt}, and the random seeds are $20261118$ (calibration), $7$ (modal allocation) and $11$ (amplitude envelope).
+
+\begin{thebibliography}{99}
+
+\bibitem{acebron2005} J.~A. Acebr\'on, L.~L. Bonilla, C.~J. P\'erez Vicente, F.~Ritort and R.~Spigler, The Kuramoto Model: A Simple Paradigm for Synchronization Phenomena, \emph{Reviews of Modern Physics} 77 (2005), 137--185.
+
+\bibitem{aranson2002} I.~S. Aranson and L.~Kramer, The World of the Complex Ginzburg--Landau Equation, \emph{Reviews of Modern Physics} 74 (2002), 99--143.
+
+\bibitem{aubin1991} J.-P. Aubin, \emph{Viability Theory}, Birkh\"auser, Boston, 1991.
+
+\bibitem{aubin2011} J.-P. Aubin, A.~M. Bayen and P.~Saint-Pierre, \emph{Viability Theory: New Directions}, second edition, Springer, Berlin, 2011.
+
+\bibitem{berz1998} M.~Berz and K.~Makino, Verified Integration of ODEs and Flows Using Differential Algebraic Methods on High-Order Taylor Models, \emph{Reliable Computing} 4 (1998), 361--369.
+
+\bibitem{blanchini1999} F.~Blanchini, Set Invariance in Control, \emph{Automatica} 35 (1999), 1747--1767.
+
+\bibitem{fiedler1973} M.~Fiedler, Algebraic Connectivity of Graphs, \emph{Czechoslovak Mathematical Journal} 23 (1973), 298--305.
+
+\bibitem{gronwall1919} T.~H. Gronwall, Note on the Derivatives with Respect to a Parameter of the Solutions of a System of Differential Equations, \emph{Annals of Mathematics} 20 (1919), 292--296.
+
+\bibitem{kuramoto1984} Y.~Kuramoto, \emph{Chemical Oscillations, Waves, and Turbulence}, Springer, Berlin, 1984.
+
+\bibitem{lohner1987} R.~J. Lohner, Enclosing the Solutions of Ordinary Initial and Boundary Value Problems, in \emph{Computer Arithmetic: Scientific Computation and Programming Languages}, Teubner, Stuttgart, 1987, 255--286.
+
+\bibitem{lombardo2026} D.~Lombardo, Energy-Driven Structure in Coupled Brain--Body Dynamics, \emph{Scientific Reports} 16 (2026), 38175, doi:10.1038/s41598-026-72942-9.
+
+\bibitem{milanese1991} M.~Milanese and A.~Vicino, Optimal Estimation Theory for Dynamic Systems with Set Membership Uncertainty: An Overview, \emph{Automatica} 27 (1991), 997--1009.
+
+\bibitem{moore1966} R.~E. Moore, \emph{Interval Analysis}, Prentice-Hall, Englewood Cliffs, 1966.
+
+\bibitem{moore2009} R.~E. Moore, R.~B. Kearfott and M.~J. Cloud, \emph{Introduction to Interval Analysis}, SIAM, Philadelphia, 2009.
+
+\bibitem{nagumo1942} M.~Nagumo, \"Uber die Lage der Integralkurven gew\"ohnlicher Differentialgleichungen, \emph{Proceedings of the Physico-Mathematical Society of Japan} 24 (1942), 551--559.
+
+\bibitem{nedialkov1999} N.~S. Nedialkov, K.~R. Jackson and G.~F. Corliss, Validated Solutions of Initial Value Problems for Ordinary Differential Equations, \emph{Applied Mathematics and Computation} 105 (1999), 21--68.
+
+\bibitem{neumaier1993} A.~Neumaier, The Wrapping Effect, Ellipsoid Arithmetic, Stability and Confidence Regions, \emph{Computing Supplementum} 9 (1993), 175--190.
+
+\bibitem{olfati2004} R.~Olfati-Saber and R.~M. Murray, Consensus Problems in Networks of Agents with Switching Topology and Time-Delays, \emph{IEEE Transactions on Automatic Control} 49 (2004), 1520--1533.
+
+\bibitem{pikovsky2001} A.~Pikovsky, M.~Rosenblum and J.~Kurths, \emph{Synchronization: A Universal Concept in Nonlinear Sciences}, Cambridge University Press, Cambridge, 2001.
+
+\bibitem{stuart1960} J.~T. Stuart, On the Non-Linear Mechanics of Wave Disturbances in Stable and Unstable Parallel Flows, \emph{Journal of Fluid Mechanics} 9 (1960), 353--370.
+
+\bibitem{tucker2011} W.~Tucker, \emph{Validated Numerics: A Short Introduction to Rigorous Computations}, Princeton University Press, Princeton, 2011.
+
+\end{thebibliography}
+
+\end{document}

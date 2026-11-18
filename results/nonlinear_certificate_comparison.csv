@@ -1,0 +1,5 @@
+method,cumulative_cost,factor_over_actual
+Actual nonlinear expenditure,0.0002991643607080713,1.0
+Global transverse bound,0.012373052308929183,41.35871090942874
+Constant-forcing spectral bound,44.613057521681014,149125.57570724492
+Decay-sensitive spectral bound,0.06201631952886908,207.29848763431235

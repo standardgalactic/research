@@ -1,0 +1,4 @@
+method,expenditure_upper,uniform_energy_lower,improvement_percent,floor_pass
+constant dissipation,0.001879417765043,0.098120582234957,0.00000000,True
+time-dependent two-stage,0.001878964319073,0.098121035680927,0.02412694,True
+quadratic Riccati,0.001870464213121,0.098129535786879,0.47640030,True

@@ -1,0 +1,125 @@
+
+================================================================
+Flyxion correction run - 2026-11-18 16:49:16
+Backup snapshot: backup_20261118_164916
+================================================================
+
+[name/concept] ./Why_AI_Safety_Branding_Accelerates_Risk.txt
+  L244: kept as-is [c]: A credentialed, cryptographically secure, real photograph with a fake caption passes the technical check with flying colors, but severely misleads the public.
+  L716: kept as-is [c]: It felt profoundly science fiction, reading engineers worry about a server rack's sense of self.
+  L781: kept as-is [c]: If millions of top-tier researchers, financial analysts, fiction writers, and government executives,
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.vtt
+  L136: It's authored by an independent researcher going by the name Flexion, and it's titled Evidenciary Authority and the Acceleration of AI, Safety Claims, Attribution, and Revisable Judgment.
+  L748: This leads us directly to the core philosophical principle Flaxion is pushing for here.
+  L1051: And it is precisely why Flexion implements what are known as grounded labeling semantics within the graph's architecture.
+  L1240: Phlyxian, the author of the paper, explicitly states they take no position whatsoever on the internal sincerity of the company's researchers, nor do they take a position on the philosophical value of AI safety work as a whole.
+  L1375: What's fascinating here is that that is the precise critical lens Flaxian applies in the paper.
+  L1642: This is where Flaxian's paper moves from structural logic to behavioral economics.
+  L2155: But Flixion sharply points out that we must rigorously separate three distinct concepts in this discussion,
+  L3094: Something that builds directly upon Flixion's paper,
+  L3115: We are, quite literally, teaching the machines how to build the very claim graphs Flixion is proposing we use to govern them.
+  (9 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.srt
+  L179: It's authored by an independent researcher going by the name Flexion, and it's titled Evidenciary Authority and the Acceleration of AI, Safety Claims, Attribution, and Revisable Judgment.
+  L995: This leads us directly to the core philosophical principle Flaxion is pushing for here.
+  L1399: And it is precisely why Flexion implements what are known as grounded labeling semantics within the graph's architecture.
+  L1651: Phlyxian, the author of the paper, explicitly states they take no position whatsoever on the internal sincerity of the company's researchers, nor do they take a position on the philosophical value of AI safety work as a whole.
+  L1831: What's fascinating here is that that is the precise critical lens Flaxian applies in the paper.
+  L2187: This is where Flaxian's paper moves from structural logic to behavioral economics.
+  L2871: But Flixion sharply points out that we must rigorously separate three distinct concepts in this discussion,
+  L4123: Something that builds directly upon Flixion's paper,
+  L4151: We are, quite literally, teaching the machines how to build the very claim graphs Flixion is proposing we use to govern them.
+  (9 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.txt
+  L45: It's authored by an independent researcher going by the name Flexion, and it's titled Evidenciary Authority and the Acceleration of AI, Safety Claims, Attribution, and Revisable Judgment.
+  L249: This leads us directly to the core philosophical principle Flaxion is pushing for here.
+  L350: And it is precisely why Flexion implements what are known as grounded labeling semantics within the graph's architecture.
+  L413: Phlyxian, the author of the paper, explicitly states they take no position whatsoever on the internal sincerity of the company's researchers, nor do they take a position on the philosophical value of AI safety work as a whole.
+  L458: What's fascinating here is that that is the precise critical lens Flaxian applies in the paper.
+  L547: This is where Flaxian's paper moves from structural logic to behavioral economics.
+  L718: But Flixion sharply points out that we must rigorously separate three distinct concepts in this discussion,
+  L1031: Something that builds directly upon Flixion's paper,
+  L1038: We are, quite literally, teaching the machines how to build the very claim graphs Flixion is proposing we use to govern them.
+  (9 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.tsv
+  L46: 183280	195200	It's authored by an independent researcher going by the name Flexion, and it's titled Evidenciary Authority and the Acceleration of AI, Safety Claims, Attribution, and Revisable Judgment.
+  L250: 1001460	1005420	This leads us directly to the core philosophical principle Flaxion is pushing for here.
+  L351: 1481980	1487560	And it is precisely why Flexion implements what are known as grounded labeling semantics within the graph's architecture.
+  L414: 1772140	1784460	Phlyxian, the author of the paper, explicitly states they take no position whatsoever on the internal sincerity of the company's researchers, nor do they take a position on the philosophical value of AI safety work as a whole.
+  L459: 2058140	2064140	What's fascinating here is that that is the precise critical lens Flaxian applies in the paper.
+  L548: 2572360	2577000	This is where Flaxian's paper moves from structural logic to behavioral economics.
+  L719: 3196700	3202020	But Flixion sharply points out that we must rigorously separate three distinct concepts in this discussion,
+  L1032: 4288200	4290440	Something that builds directly upon Flixion's paper,
+  L1039: 4312300	4319720	We are, quite literally, teaching the machines how to build the very claim graphs Flixion is proposing we use to govern them.
+  (9 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.json
+  L1: [JSON content omitted]
+  (1 line(s) changed)
+
+==== Candidate Variants (aggregated, 2 unique) ====
+     12 flysonian
+      6 flying
+
+==== Summary ====
+Files scanned        : 6
+Files updated        : 5
+Files unchanged      : 1
+Unique candidates    : 2
+Elapsed time         : 34s
+
+================================================================
+Run complete at 2026-11-18 16:49:50
+================================================================
+
+================================================================
+Flyxion correction run - 2026-11-18 16:50:49
+Backup snapshot: backup_20261118_165049
+================================================================
+
+[name/concept] ./Why_AI_Safety_Branding_Accelerates_Risk.txt
+  L244: kept as-is [c]: A credentialed, cryptographically secure, real photograph with a fake caption passes the technical check with flying colors, but severely misleads the public.
+  L716: kept as-is [c]: It felt profoundly science fiction, reading engineers worry about a server rack's sense of self.
+  L781: kept as-is [c]: If millions of top-tier researchers, financial analysts, fiction writers, and government executives,
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.vtt
+  L2872: if Flysonian solutions, like the claim graph,
+  L2887: Flysonian proposes concrete tests
+  (2 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.srt
+  L3827: if Flysonian solutions, like the claim graph,
+  L3847: Flysonian proposes concrete tests
+  (2 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.txt
+  L957: if Flysonian solutions, like the claim graph,
+  L962: Flysonian proposes concrete tests
+  (2 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.tsv
+  L958: 4063400	4065960	if Flysonian solutions, like the claim graph,
+  L963: 4076040	4077720	Flysonian proposes concrete tests
+  (2 line(s) changed)
+
+[substitution] ./Why_AI_Safety_Branding_Accelerates_Risk.json
+  L1: [JSON content omitted]
+  (1 line(s) changed)
+
+==== Candidate Variants (aggregated, 1 unique) ====
+      6 flying
+
+==== Summary ====
+Files scanned        : 6
+Files updated        : 5
+Files unchanged      : 1
+Unique candidates    : 1
+Elapsed time         : 29s
+
+================================================================
+Run complete at 2026-11-18 16:51:18
+================================================================

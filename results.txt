@@ -1,0 +1,2 @@
+trials 20000 updates checked 120000 mismatches 0
+operations {'add_claim': 20002, 'add_obj': 20046, 'add_step': 19712, 'del_obj': 20135, 'del_step': 20183, 'flip_base': 19922}
